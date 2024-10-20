@@ -33,19 +33,21 @@ begin
   monto_total:=0;
   for i:= 1 to inversiones do
   begin
-    textcolor(green); write('Introducir monto de la inversión ',i,' de la empresa ',empresa,': ');
-    textcolor(yellow); readln(monto);
+    monto:=1+random(1000);
     monto_total:=monto_total+monto;
   end;
 end;
 procedure leer_empresa(var registro_empresa: t_registro_empresa);
+var
+  i: int8;
 begin
-  textcolor(green); write('Introducir código de empresa de la empresa: ');
-  textcolor(yellow); readln(registro_empresa.empresa);
-  textcolor(green); write('Introducir cantidad de inversiones de la empresa: ');
-  textcolor(yellow); readln(registro_empresa.inversiones);
-  if (registro_empresa.inversiones>0) then
-    leer_inversiones(registro_empresa.empresa,registro_empresa.inversiones,registro_empresa.monto_total);
+  i:=random(100);
+  if (i=0) then
+    registro_empresa.empresa:=empresa_salida
+  else
+    registro_empresa.empresa:=1+random(high(int16));
+  registro_empresa.inversiones:=1+random(1000);
+  leer_inversiones(registro_empresa.empresa,registro_empresa.inversiones,registro_empresa.monto_total);
 end;
 procedure agregar_adelante_lista_empresas(var lista_empresas: t_lista_empresas; registro_empresa: t_registro_empresa);
 var
@@ -102,6 +104,7 @@ var
   lista_empresas: t_lista_empresas;
   empresa_max, empresas_corte: int16;
 begin
+  randomize;
   lista_empresas:=nil;
   empresa_max:=0;
   empresas_corte:=0;

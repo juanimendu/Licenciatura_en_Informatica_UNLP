@@ -20,7 +20,7 @@ type
   t_rango=rango_ini..rango_fin;
   t_registro_sonda=record
     nombre: string;
-    duracion: int16;
+    duracion: int8;
     costo_construccion: real;
     costo_mantenimiento: real;
     rango: t_rango;
@@ -38,18 +38,29 @@ begin
   for i:= rango_ini to rango_fin do
     vector_rangos[i]:=0;
 end;
-procedure leer_sonda(var registro_sonda: t_registro_sonda);
+function random_string(length: int8): string;
+var
+  i: int8;
+  string_aux: string;
 begin
-  textcolor(green); write('Introducir nombre de la sonda: ');
-  textcolor(yellow); readln(registro_sonda.nombre);
-  textcolor(green); write('Introducir duración estimada de la misión de la sonda (cantidad de meses que permanecerá activa): ');
-  textcolor(yellow); readln(registro_sonda.duracion);
-  textcolor(green); write('Introducir costo de construcción de la sonda: ');
-  textcolor(yellow); readln(registro_sonda.costo_construccion);
-  textcolor(green); write('Introducir costo de mantenimiento mensual de la sonda: ');
-  textcolor(yellow); readln(registro_sonda.costo_mantenimiento);
-  textcolor(green); write('Introducir rango del espectro electromagnético sobre el que realizará estudios la sonda (1. radio; 2. microondas; 3. infrarrojo; 4. luz visible; 5. ultravioleta; 6. rayos X; 7. rayos gamma): ');
-  textcolor(yellow); readln(registro_sonda.rango);
+  string_aux:='';
+  for i:= 1 to length do
+    string_aux:=string_aux+chr(ord('A')+random(26));
+  random_string:=string_aux;
+end;
+procedure leer_sonda(var registro_sonda: t_registro_sonda);
+var
+  i: int8;
+begin
+  i:=random(100);
+  if (i=0) then
+    registro_sonda.nombre:=nombre_salida
+  else
+    registro_sonda.nombre:=random_string(5+random(6));
+  registro_sonda.duracion:=1+random(high(int8));
+  registro_sonda.costo_construccion:=1+random(10000);
+  registro_sonda.costo_mantenimiento:=1+random(100);
+  registro_sonda.rango:=rango_ini+random(rango_fin);
 end;
 procedure agregar_adelante_lista_sondas(var lista_sondas: t_lista_sondas; registro_sonda: t_registro_sonda);
 var
@@ -153,6 +164,7 @@ var
   duracion_prom, costo_prom: real;
   nombre_max: string;
 begin
+  randomize;
   lista_sondas:=nil;
   nombre_max:='';
   inicializar_vector_rangos(vector_rangos);

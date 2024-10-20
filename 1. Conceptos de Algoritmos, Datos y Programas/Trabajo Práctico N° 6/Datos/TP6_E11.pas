@@ -24,16 +24,29 @@ type
     ele: t_registro_alumno;
     sig: t_lista_alumnos;
   end;
-procedure leer_alumno(var registro_alumno: t_registro_alumno);
+function random_string(length: int8): string;
+var
+  i: int8;
+  string_aux: string;
 begin
-  textcolor(green); write('Introducir número de alumno del alumno: ');
-  textcolor(yellow); readln(registro_alumno.alumno);
+  string_aux:='';
+  for i:= 1 to length do
+    string_aux:=string_aux+chr(ord('A')+random(26));
+  random_string:=string_aux;
+end;
+procedure leer_alumno(var registro_alumno: t_registro_alumno);
+var
+  i: int8;
+begin
+  i:=random(100);
+  if (i=0) then
+    registro_alumno.alumno:=alumno_salida
+  else
+    registro_alumno.alumno:=1+random(high(int16));
   if (registro_alumno.alumno<>alumno_salida) then
   begin
-    textcolor(green); write('Introducir apellido del alumno: ');
-    textcolor(yellow); readln(registro_alumno.apellido);
-    textcolor(green); write('Introducir promedio obtenido durante toda la carrera del alumno: ');
-    textcolor(yellow); readln(registro_alumno.promedio);
+    registro_alumno.apellido:=random_string(5+random(6));
+    registro_alumno.promedio:=4+random(61)/10;
   end;
 end;
 procedure agregar_ordenado_lista_alumnos(var lista_alumnos: t_lista_alumnos; registro_alumno: t_registro_alumno);
@@ -80,6 +93,7 @@ end;
 var
   lista_alumnos: t_lista_alumnos;
 begin
+  randomize;
   lista_alumnos:=nil;
   cargar_lista_alumnos(lista_alumnos);
   if (lista_alumnos<>nil) then

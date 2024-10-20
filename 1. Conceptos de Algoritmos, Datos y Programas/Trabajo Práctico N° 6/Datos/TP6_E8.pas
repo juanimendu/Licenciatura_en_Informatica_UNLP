@@ -72,12 +72,12 @@ procedure imprimir_lista(L: lista);
 var
   i: int16;
 begin
-  i:=1;
+  i:=0;
   while (L<>nil) do
   begin
+    i:=i+1;
     textcolor(green); write('Elemento ',i,' de la lista: '); textcolor(yellow); writeln(L^.num);
     L:=L^.sig;
-    i:=i+1;
   end;
 end;
 procedure modificar_lista(var L: lista; valor: int16);
@@ -131,32 +131,38 @@ begin
   calcular_multiplos:=multiplos;
 end;
 var
+  vector_numeros: array[1..5] of integer=(10, 21, 13, 48, 0);
   pri, ult: lista;
-  valor, divisor: integer;
+  pos, valor: integer;
 begin
-  pri:=nil; ult:=nil;
-  textcolor(green); write('Introducir número entero: ');
-  textcolor(yellow); readln(valor);
+  randomize;
+  pri:=nil;
+  writeln(); textcolor(red); writeln('EJERCICIO 1. INCISO (b):'); writeln();
+  pos:=1;
+  valor:=vector_numeros[pos];
   while (valor<>0) do
   begin
     //armarNodo1(pri,valor);
     //armarNodo2(pri,valor);
     //armarNodo3(pri,ult,valor);
     armarNodo4(pri,valor);
-    textcolor(green); write('Introducir número entero: ');
-    textcolor(yellow); readln(valor);
+    pos:=pos+1;
+    valor:=vector_numeros[pos];
   end;
   if (pri<>nil) then
   begin
+    writeln(); textcolor(red); writeln('EJERCICIO 1. INCISO (c):'); writeln();
     imprimir_lista(pri);
-    textcolor(green); write('Introducir número entero con el cual se desea incrementar cada dato de la lista: ');
-    textcolor(yellow); readln(valor);
+    writeln(); textcolor(red); writeln('EJERCICIO 1. INCISO (d):'); writeln();
+    valor:=1+random(100);
     modificar_lista(pri,valor);
     imprimir_lista(pri);
+    writeln(); textcolor(red); writeln('EJERCICIO 4. INCISO (a):'); writeln();
     textcolor(green); write('El elemento de valor máximo de la lista es '); textcolor(red); writeln(calcular_maximo(pri));
+    writeln(); textcolor(red); writeln('EJERCICIO 4. INCISO (b):'); writeln();
     textcolor(green); write('El elemento de valor mínimo de la lista es '); textcolor(red); writeln(calcular_minimo(pri));
-    textcolor(green); write('Introducir número entero como divisor para calcular cuántos elementos de la lista son múltiplos de él: ');
-    textcolor(yellow); readln(divisor);
-    textcolor(green); write('La cantidad de elementos de la lista que son múltiplos de '); textcolor(yellow); write(divisor); textcolor(green); write(' es '); textcolor(red); write(calcular_multiplos(pri,divisor));
+    writeln(); textcolor(red); writeln('EJERCICIO 4. INCISO (c):'); writeln();
+    valor:=1+random(10);
+    textcolor(green); write('La cantidad de elementos de la lista que son múltiplos de '); textcolor(yellow); write(valor); textcolor(green); write(' es '); textcolor(red); write(calcular_multiplos(pri,valor));
   end;
 end.

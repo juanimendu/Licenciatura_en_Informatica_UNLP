@@ -36,28 +36,32 @@ type
     sig: t_lista_tanques;
   end;
 procedure leer_tanque(var registro_tanque: t_registro_tanque);
+var
+  vector_tanques: array[1..2] of char=(tanque_r, tanque_c);
+  i: int8;
 begin
-  textcolor(green); write('Introducir tipo de tanque vendido (R o C) por el fabricante: ');
-  textcolor(yellow); readln(registro_tanque.tanque);
+  i:=random(100);
+  if (i=0) then
+    registro_tanque.tanque:=tanque_salida
+  else
+    registro_tanque.tanque:=vector_tanques[1+random(2)];
   if (registro_tanque.tanque<>tanque_salida) then
   begin
-    if (registro_tanque.tanque=tanque_c) then
+    if (registro_tanque.tanque=tanque_r) then
     begin
-      textcolor(green); write('Introducir radio del tanque vendido ',registro_tanque.tanque,' por el fabricante: ');
-      textcolor(yellow); readln(registro_tanque.radio);
-      textcolor(green); write('Introducir alto del tanque vendido ',registro_tanque.tanque,' por el fabricante: ');
-      textcolor(yellow); readln(registro_tanque.alto);
-      registro_tanque.volumen:=pi*registro_tanque.radio*registro_tanque.radio*registro_tanque.alto;
+      registro_tanque.ancho:=1+random(391)/10;
+      registro_tanque.largo:=1+random(391)/10;
+      registro_tanque.alto:=1+random(21)/10;
+      registro_tanque.volumen:=registro_tanque.ancho*registro_tanque.largo*registro_tanque.alto;
+      registro_tanque.radio:=-1;
     end
     else
     begin
-      textcolor(green); write('Introducir ancho del tanque vendido ',registro_tanque.tanque,' por el fabricante: ');
-      textcolor(yellow); readln(registro_tanque.ancho);
-      textcolor(green); write('Introducir largo del tanque vendido ',registro_tanque.tanque,' por el fabricante: ');
-      textcolor(yellow); readln(registro_tanque.largo);
-      textcolor(green); write('Introducir alto del tanque vendido ',registro_tanque.tanque,' por el fabricante: ');
-      textcolor(yellow); readln(registro_tanque.alto);
-      registro_tanque.volumen:=registro_tanque.ancho*registro_tanque.largo*registro_tanque.alto;
+      registro_tanque.radio:=1+random(391)/10;
+      registro_tanque.alto:=1+random(21)/10;
+      registro_tanque.volumen:=pi*registro_tanque.radio*registro_tanque.radio*registro_tanque.alto;
+      registro_tanque.ancho:=-1;
+      registro_tanque.largo:=-1;
     end;
   end;
 end;
@@ -131,6 +135,7 @@ var
   tanques_c, tanques_r, tanques_corte_alto, tanques_corte_volumen: int16;
   volumen_max1, volumen_max2, volumen_total_c, volumen_total_r: real;
 begin
+  randomize;
   lista_tanques:=nil;
   volumen_max1:=0; volumen_max2:=0;
   tanques_c:=0; volumen_total_c:=0;

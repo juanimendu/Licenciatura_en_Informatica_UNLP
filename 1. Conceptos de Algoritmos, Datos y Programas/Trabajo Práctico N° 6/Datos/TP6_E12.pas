@@ -16,7 +16,7 @@ const
   ram_corte=3; tamanio_corte=5;
 type
   t_registro_celular=record
-    version: int16;
+    version: int8;
     tamanio: real;
     ram: real;
   end;
@@ -25,12 +25,20 @@ type
     ele: t_registro_celular;
     sig: t_lista_celulares;
   end;
-procedure leer_celular(var registro_celular: t_registro_celular);
+procedure leer_celular(var registro_celular: t_registro_celular; version: int8);
+var
+  i: int8;
 begin
-  registro_celular.version:=version_salida+random(100);
+  i:=random(101);
+  if (i=0) then
+    registro_celular.version:=version_salida
+  else if (i<=50) then
+    registro_celular.version:=version
+  else
+    registro_celular.version:=1+random(high(int8));
   if (registro_celular.version<>version_salida) then
   begin
-    registro_celular.tamanio:=1+random(10);
+    registro_celular.tamanio:=1+random(91)/10;
     registro_celular.ram:=1+random(64);
   end;
 end;
@@ -56,11 +64,11 @@ procedure cargar_lista_celulares(var lista_celulares: t_lista_celulares);
 var
   registro_celular: t_registro_celular;
 begin
-  leer_celular(registro_celular);
+  leer_celular(registro_celular,1+random(high(int8)));
   while (registro_celular.version<>version_salida) do
   begin
     agregar_ordenado_lista_celulares(lista_celulares,registro_celular);
-    leer_celular(registro_celular);
+    leer_celular(registro_celular,registro_celular.version);
   end;
 end;
 function cumple_criterios(registro_celular: t_registro_celular): boolean;
@@ -69,7 +77,8 @@ begin
 end;
 procedure procesar_lista_celulares(lista_celulares: t_lista_celulares; var celulares_corte: int16; var tamanio_prom: real);
 var
-  version, celulares_version, celulares_total: int16;
+  version: int8;
+  celulares_version, celulares_total: int16;
   tamanio_total: real;
 begin
   celulares_total:=0; tamanio_total:=0;

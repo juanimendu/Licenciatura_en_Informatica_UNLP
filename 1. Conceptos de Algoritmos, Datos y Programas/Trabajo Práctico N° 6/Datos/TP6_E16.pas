@@ -43,18 +43,34 @@ begin
   random_string:=string_aux;
 end;
 procedure leer_corredor(var registro_corredor: t_registro_corredor);
+var
+  i: int8;
 begin
-  repeat
-    registro_corredor.distancia:=distancia_salida+random(1000);
-  until (registro_corredor.distancia<>0);
+  i:=random(100);
+  if (i=0) then
+    registro_corredor.distancia:=distancia_salida
+  else
+    registro_corredor.distancia:=1+random(91)/10;
   if (registro_corredor.distancia<>distancia_salida) then
   begin
     registro_corredor.nombre:=random_string(1+random(10));
-    registro_corredor.apellido:=random_string(1+random(10));
-    registro_corredor.tiempo:=1+random(1000);
-    registro_corredor.pais:=pais_corte+random_string(random(10));
-    registro_corredor.ciudad_ini:=ciudad_corte+random_string(random(10));
-    registro_corredor.ciudad_fin:=ciudad_corte+random_string(random(10)); 
+    registro_corredor.apellido:=random_string(5+random(6));
+    registro_corredor.tiempo:=1+random(360);
+    i:=random(10);
+    if (i=0) then
+      registro_corredor.pais:=pais_corte
+    else
+      registro_corredor.pais:=random_string(5+random(6));
+    i:=random(10);
+    if (i=0) then
+      registro_corredor.ciudad_ini:=ciudad_corte
+    else
+      registro_corredor.ciudad_ini:=random_string(5+random(6));
+    i:=random(10);
+    if (i=0) then
+      registro_corredor.ciudad_fin:=random_string(5+random(6))
+    else
+      registro_corredor.ciudad_fin:=registro_corredor.ciudad_ini;
   end;
 end;
 procedure agregar_ordenado_lista_corredores(var lista_corredores: t_lista_corredores; registro_corredor: t_registro_corredor);
@@ -153,9 +169,9 @@ begin
   if (lista_corredores<>nil) then
   begin
     procesar_lista_corredores(lista_corredores,corredores_total,corredores_distinta_ciudad,distancia_total,tiempo_total,distancia_max,distancia_prom_corte,tiempo_prom_corte,ciudad_max);
-    textcolor(green); write('La cantidad total de corredores, la distancia total recorrida y el tiempo total de carrera de todos los corredores son '); textcolor(red); write(corredores_total); textcolor(green); write(', '); textcolor(red); write(distancia_total:0:2); textcolor(green); write(' y '); textcolor(red); write(tiempo_total:0:2); textcolor(green); writeln(', respectivamente');
+    textcolor(green); write('La cantidad total de corredores, la distancia total recorrida y el tiempo total de carrera de todos los corredores son '); textcolor(red); write(corredores_total); textcolor(green); write(' corredores, '); textcolor(red); write(distancia_total:0:2); textcolor(green); write(' km y '); textcolor(red); write(tiempo_total:0:2); textcolor(green); writeln(' minutos, respectivamente');
     textcolor(green); write('El nombre de la ciudad que convocó la mayor cantidad de corredores y la cantidad total de kilómetros recorridos por los corredores de esa ciudad es '); textcolor(red); write(ciudad_max); textcolor(green); write(' y '); textcolor(red); write(distancia_max:0:2); textcolor(green); writeln(', respectivamnte');
-    textcolor(green); write('La distancia promedio recorrida por corredores de '); textcolor(yellow); write(pais_corte); textcolor(green); write(' es '); textcolor(red); writeln(distancia_prom_corte:0:2);
+    textcolor(green); write('La distancia promedio recorrida por corredores de '); textcolor(yellow); write(pais_corte); textcolor(green); write(' es '); textcolor(red); write(distancia_prom_corte:0:2); textcolor(green); writeln(' km');
     textcolor(green); write('La cantidad de corredores que partieron de una ciudad y finalizaron en otra ciudad es '); textcolor(red); writeln(corredores_distinta_ciudad);
     textcolor(green); write('El paso (cantidad de minutos por km) promedio de los corredores de la ciudad de '); textcolor(yellow); write(ciudad_corte); textcolor(green); write(' es '); textcolor(red); write(tiempo_prom_corte:0:2);
   end;

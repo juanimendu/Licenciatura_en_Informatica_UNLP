@@ -27,6 +27,16 @@ type
     ele: t_registro_cliente;
     sig: t_lista_clientes;
   end;
+procedure leer_dni(var dni: int32);
+var
+  i: int8;
+begin
+  i:=random(high(int8));
+  if (i=0) then
+    dni:=dni_salida
+  else
+    dni:=10000000+random(40000001);
+end;
 procedure RecibirCliente(dni: int32; var lista_clientes: t_lista_clientes);
 var
   nuevo, ult: t_lista_clientes;
@@ -52,13 +62,11 @@ procedure cargar_lista_clientes(var lista_clientes: t_lista_clientes);
 var
   dni: int32;
 begin
-  textcolor(green); write('Introducir DNI del cliente: ');
-  textcolor(yellow); readln(dni);
+  leer_dni(dni);
   while (dni<>dni_salida) do
   begin
     RecibirCliente(dni,lista_clientes);
-    textcolor(green); write('Introducir DNI del cliente: ');
-    textcolor(yellow); readln(dni);
+    leer_dni(dni);
   end;
 end;
 procedure AtenderCliente(var lista_clientes: t_lista_clientes; var numero: int16; var dni: int32);
@@ -86,25 +94,26 @@ begin
     textcolor(green); write('El número y el DNI del cliente a ser atendido son '); textcolor(red); write(numero); textcolor(green); write(' y '); textcolor(red); write(dni); textcolor(green); writeln(', respectivamente');
   end;
 end;
-procedure imprimir_lista(lista_clientes: t_lista_clientes);
+procedure imprimir_lista_clientes(lista_clientes: t_lista_clientes);
 begin
   while (lista_clientes<>nil) do
   begin
     textcolor(green); write('El DNI del cliente es '); textcolor(red); writeln(lista_clientes^.ele.dni);
     textcolor(green); write('El número del cliente es '); textcolor(red); writeln(lista_clientes^.ele.numero);
-    textcolor(green); writeln('------------------------------');
+    writeln();
     lista_clientes:=lista_clientes^.sig;
   end;
 end;
 var
   lista_clientes: t_lista_clientes;
 begin
+  randomize;
   lista_clientes:=nil;
   cargar_lista_clientes(lista_clientes);
   if (lista_clientes<>nil) then
   begin
-    imprimir_lista(lista_clientes);
+    imprimir_lista_clientes(lista_clientes);
     vaciar_lista_clientes(lista_clientes);
-    imprimir_lista(lista_clientes);
+    imprimir_lista_clientes(lista_clientes);
   end;
 end.

@@ -14,7 +14,7 @@ type
     num: integer;
     sig: lista;
   end;
-procedure armarNodo(var L: lista; v: integer);
+procedure armarNodo1(var L: lista; v: integer);
 var
   aux: lista;
 begin
@@ -22,6 +22,36 @@ begin
   aux^.num:=v;
   aux^.sig:=L;
   L:=aux;
+end;
+procedure armarNodo2(var L: lista; v: integer);
+var
+  aux, ult: lista;
+begin
+  new(aux);
+  aux^.num:=v;
+  aux^.sig:=nil;
+  if (L=nil) then
+    L:=aux
+  else
+  begin
+    ult:=L;
+    while (ult^.sig<>nil) do
+      ult:=ult^.sig;
+    ult^.sig:=aux;
+  end;
+end;
+procedure armarNodo3(var L, ult: lista; v: integer);
+var
+  aux: lista;
+begin
+  new(aux);
+  aux^.num:=v;
+  aux^.sig:=nil;
+  if (L=nil) then
+    L:=aux
+  else
+    ult^.sig:=aux;
+  ult:=aux;
 end;
 procedure imprimir_lista(L: lista);
 var
@@ -87,7 +117,7 @@ begin
 end;
 var
   vector_numeros: array[1..5] of integer=(10, 21, 13, 48, 0);
-  pri: lista;
+  pri, ult: lista;
   pos, valor: integer;
 begin
   randomize;
@@ -97,7 +127,9 @@ begin
   valor:=vector_numeros[pos];
   while (valor<>0) do
   begin
-    armarNodo(pri,valor);
+    armarNodo1(pri,valor);
+    //armarNodo2(pri,valor);
+    //armarNodo3(pri,ult,valor);
     pos:=pos+1;
     valor:=vector_numeros[pos];
   end;

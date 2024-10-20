@@ -33,43 +33,47 @@ type
     legajo: int16;
     condicion: char;
     presente: int8;
+    nota_total: int8;
     notas_cero: int8;
     notas_diez: int8;
-    nota_total: int8;
   end;
   t_lista_alumnos=^t_nodo_alumnos;
   t_nodo_alumnos=record
     ele: t_registro_alumno;
     sig: t_lista_alumnos;
   end;
-procedure leer_notas(var presente, notas_cero, notas_diez, nota_total: int8);
+procedure leer_notas(var presente, nota_total, notas_cero, notas_diez: int8);
 var
   i, nota: int8;
 begin
+  presente:=0; nota_total:=0; notas_cero:=0; notas_diez:=0;
   for i:= 1 to autoeva_total do
   begin
-    textcolor(green); write('Introducir nota de autoevaluación ',i,' del alumno: ');
-    textcolor(yellow); readln(nota);
+    nota:=nota_incumple+random(12);
     if ((nota<>nota_incumple) and (nota>=nota_corte)) then
       presente:=presente+1;
+    if (nota<>nota_incumple) then
+      nota_total:=nota_total+nota;
     if (nota=nota_cero) then
       notas_cero:=notas_cero+1;
     if (nota=nota_diez) then
       notas_diez:=notas_diez+1;
-    if (nota<>nota_incumple) then
-      nota_total:=nota_total+nota;
   end;
 end;
 procedure leer_alumno(var registro_alumno: t_registro_alumno);
+var
+  vector_condiciones: array[1..2] of char=(condicion_i, condicion_r);
+  i: int8;
 begin
-  textcolor(green); write('Introducir legajo del alumno: ');
-  textcolor(yellow); readln(registro_alumno.legajo);
+  i:=random(100);
+  if (i=0) then
+    registro_alumno.legajo:=legajo_salida
+  else
+    registro_alumno.legajo:=1+random(high(int16));
   if (registro_alumno.legajo<>legajo_salida) then
   begin
-    textcolor(green); write('Introducir condición (I para INGRESANTE, R para RECURSANTE) del alumno: ');
-    textcolor(yellow); readln(registro_alumno.condicion);
-    registro_alumno.presente:=0; registro_alumno.notas_cero:=0; registro_alumno.notas_diez:=0; registro_alumno.nota_total:=0;
-    leer_notas(registro_alumno.presente,registro_alumno.notas_cero,registro_alumno.notas_diez,registro_alumno.nota_total);
+    registro_alumno.condicion:=vector_condiciones[1+random(2)];
+    leer_notas(registro_alumno.presente,registro_alumno.nota_total,registro_alumno.notas_cero,registro_alumno.notas_diez);
   end;
 end;
 procedure agregar_adelante_lista_alumnos(var lista_alumnos: t_lista_alumnos; registro_alumno: t_registro_alumno);
@@ -175,6 +179,7 @@ var
   lista_alumnos: t_lista_alumnos;
   ingresantes_parcial, ingresantes_total, recursantes_parcial, recursantes_total, alumnos_autoeva, alumnos_corte, alumnos_cero, legajo_diez_max1, legajo_diez_max2, legajo_cero_max1, legajo_cero_max2: int16;
 begin
+  randomize;
   lista_alumnos:=nil;
   ingresantes_parcial:=0; ingresantes_total:=0;
   recursantes_parcial:=0; recursantes_total:=0;

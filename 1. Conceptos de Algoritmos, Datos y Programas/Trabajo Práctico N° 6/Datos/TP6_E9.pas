@@ -72,17 +72,34 @@ begin
   else
     anterior^.sig:=nuevo;
   nuevo^.sig:=actual;
+end;procedure armarNodo5(var L: lista; v: integer);
+var
+  anterior, actual, nuevo: lista;
+begin
+  new(nuevo);
+  nuevo^.num:=v;
+  anterior:=L; actual:=L;
+  while ((actual<>nil) and (actual^.num>nuevo^.num)) do
+  begin
+    anterior:=actual;
+    actual:=actual^.sig;
+  end;
+  if (actual=L) then
+    L:=nuevo
+  else
+    anterior^.sig:=nuevo;
+  nuevo^.sig:=actual;
 end;
 procedure imprimir_lista(L: lista);
 var
   i: int16;
 begin
-  i:=1;
+  i:=0;
   while (L<>nil) do
   begin
+    i:=i+1;
     textcolor(green); write('Elemento ',i,' de la lista: '); textcolor(yellow); writeln(L^.num);
     L:=L^.sig;
-    i:=i+1;
   end;
 end;
 procedure modificar_lista(var L: lista; valor: int16);
@@ -170,6 +187,17 @@ begin
     end;
   end;
 end;
+procedure verificar_valores(var valorA, valorB: integer);
+var
+  aux: integer;
+begin
+  if (valorA>valorB) then
+  begin
+    aux:=valorA;
+    valorA:=valorB;
+    valorB:=aux;
+  end;
+end;
 procedure Sublista1(L: lista; valorA, valorB: integer; var L2: lista);
 begin
   while (L<>nil) do
@@ -198,67 +226,74 @@ begin
   end;
 end;
 var
+  vector_numeros: array[1..5] of integer=(10, 21, 13, 48, 0);
   pri, ult, pri2: lista;
-  valor, divisor, valorA, valorB: integer;
+  pos, valor, valorA, valorB: integer;
   ordenada_ascendente, ordenada_descendente: boolean;
 begin
+  randomize;
   pri:=nil; ult:=nil; pri2:=nil;
   ordenada_ascendente:=false; ordenada_descendente:=false;
-  textcolor(green); write('Introducir número entero: ');
-  textcolor(yellow); readln(valor);
+  writeln(); textcolor(red); writeln('EJERCICIO 1. INCISO (b):'); writeln();
+  pos:=1;
+  valor:=vector_numeros[pos];
   while (valor<>0) do
   begin
     armarNodo1(pri,valor);
     //armarNodo2(pri,valor);
     //armarNodo3(pri,ult,valor);
     //armarNodo4(pri,valor);
-    textcolor(green); write('Introducir número entero: ');
-    textcolor(yellow); readln(valor);
+    //armarNodo5(pri,valor);
+    pos:=pos+1;
+    valor:=vector_numeros[pos];
   end;
   if (pri<>nil) then
   begin
+    writeln(); textcolor(red); writeln('EJERCICIO 1. INCISO (c):'); writeln();
     imprimir_lista(pri);
-    textcolor(green); write('Introducir número entero con el cual se desea incrementar cada dato de la lista: ');
-    textcolor(yellow); readln(valor);
+    writeln(); textcolor(red); writeln('EJERCICIO 1. INCISO (d):'); writeln();
+    valor:=1+random(100);
     modificar_lista(pri,valor);
     imprimir_lista(pri);
+    writeln(); textcolor(red); writeln('EJERCICIO 4. INCISO (a):'); writeln();
     textcolor(green); write('El elemento de valor máximo de la lista es '); textcolor(red); writeln(calcular_maximo(pri));
+    writeln(); textcolor(red); writeln('EJERCICIO 4. INCISO (b):'); writeln();
     textcolor(green); write('El elemento de valor mínimo de la lista es '); textcolor(red); writeln(calcular_minimo(pri));
-    textcolor(green); write('Introducir número entero como divisor para calcular cuántos elementos de la lista son múltiplos de él: ');
-    textcolor(yellow); readln(divisor);
-    textcolor(green); write('La cantidad de elementos de la lista que son múltiplos de '); textcolor(yellow); write(divisor); textcolor(green); write(' es '); textcolor(red); writeln(calcular_multiplos(pri,divisor));
+    writeln(); textcolor(red); writeln('EJERCICIO 4. INCISO (c):'); writeln();
+    valor:=1+random(10);
+    textcolor(green); write('La cantidad de elementos de la lista que son múltiplos de '); textcolor(yellow); write(valor); textcolor(green); write(' es '); textcolor(red); writeln(calcular_multiplos(pri,valor));
+    writeln(); textcolor(red); writeln('EJERCICIO 9. INCISO (a):'); writeln();
     ordenada_ascendente:=EstaOrdenadaAscendente(pri);
-    textcolor(green); write('¿La lista está ordenada (ascendentemente)? '); textcolor(red); writeln(ordenada_ascendente);
+    textcolor(green); write('¿La lista está ordenada (ascendentemente)?: '); textcolor(red); writeln(ordenada_ascendente);
     if (ordenada_ascendente=false) then
     begin
       ordenada_descendente:=EstaOrdenadaDescendente(pri);
-      textcolor(green); write('¿La lista está ordenada (descendentemente)? '); textcolor(red); writeln(ordenada_descendente);
+      textcolor(green); write('¿La lista está ordenada (descendentemente)?: '); textcolor(red); writeln(ordenada_descendente);
     end;
-    textcolor(green); write('Introducir número entero que se desea eliminar de la lista (si existe): ');
-    textcolor(yellow); readln(valor);
+    writeln(); textcolor(red); writeln('EJERCICIO 9. INCISO (b):'); writeln();
+    valor:=1+random(100);
     Eliminar(pri,valor);
     if (pri<>nil) then
     begin
       imprimir_lista(pri);
-      textcolor(green); write('Introducir número entero A: ');
-      textcolor(yellow); readln(valorA);
-      textcolor(green); write('Introducir número entero B: ');
-      textcolor(yellow); readln(valorB);
+      writeln(); textcolor(red); writeln('EJERCICIO 9. INCISOS (c) (d) (e):'); writeln();
+      valorA:=calcular_minimo(pri); valorB:=calcular_maximo(pri);
+      verificar_valores(valorA,valorB);
       if ((ordenada_ascendente=false) and (ordenada_descendente=false)) then
       begin
-        textcolor(green); write('La lista pri está '); textcolor(red); write('desordenada '); textcolor(green); write(', por lo que se genera la lista pri2 utilizando el procedure '); textcolor(red); writeln('Sublista1');
+        textcolor(green); write('La lista pri está '); textcolor(red); write('desordenada'); textcolor(green); write(', por lo que se genera la lista pri2 utilizando el procedure '); textcolor(red); writeln('Sublista1');
         Sublista1(pri,valorA,valorB,pri2);
       end
       else
         if (ordenada_ascendente=true) then
         begin
-          textcolor(green); write('La lista pri está '); textcolor(red); write('ordenada de manera ascendente '); textcolor(green); write(', por lo que se genera la lista pri2 utilizando el procedure '); textcolor(red); writeln('Sublista2');
+          textcolor(green); write('La lista pri está '); textcolor(red); write('ordenada de manera ascendente'); textcolor(green); write(', por lo que se genera la lista pri2 utilizando el procedure '); textcolor(red); writeln('Sublista2');
           Sublista2(pri,valorA,valorB,pri2);
         end
         else
           if (ordenada_descendente=true) then
           begin
-            textcolor(green); write('La lista pri está '); textcolor(red); write('ordenada de manera descendente '); textcolor(green); write(', por lo que se genera la lista pri2 utilizando el procedure '); textcolor(red); writeln('Sublista3');
+            textcolor(green); write('La lista pri está '); textcolor(red); write('ordenada de manera descendente'); textcolor(green); write(', por lo que se genera la lista pri2 utilizando el procedure '); textcolor(red); writeln('Sublista3');
             Sublista3(pri,valorA,valorB,pri2);
           end;
       imprimir_lista(pri2);

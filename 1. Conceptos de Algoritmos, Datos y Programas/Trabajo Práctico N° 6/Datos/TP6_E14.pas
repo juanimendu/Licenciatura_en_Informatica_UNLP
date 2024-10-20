@@ -16,7 +16,7 @@ program TP6_E14;
 {$codepage UTF8}
 uses crt;
 const
-  alumnos_total=1300;
+  alumno_ini=1; alumno_fin= 1300;
   dia_ini=1; dia_fin=31;
   transporte_ini=1; transporte_fin=5;
   alumno_salida=-1;
@@ -24,11 +24,16 @@ const
   gasto_corte=80;
   transporte_corte=5;
 type
-  t_alumno=1..alumnos_total;
+  t_alumno=alumno_ini..alumno_fin;
   t_dia=dia_ini..dia_fin;
   t_transporte=transporte_ini..transporte_fin;
-  t_registro_viaje=record
+  t_registro_viaje1=record
     alumno: int16;
+    dia: t_dia;
+    facultad: string;
+    transporte: t_transporte;
+  end;
+  t_registro_viaje2=record
     dia: t_dia;
     facultad: string;
     transporte: t_transporte;
@@ -37,7 +42,7 @@ type
   t_vector_transportes=array[t_transporte] of int16;
   t_lista_viajes=^t_nodo_viajes;
   t_nodo_viajes=record
-    ele: t_registro_viaje;
+    ele: t_registro_viaje2;
     sig: t_lista_viajes;
   end;
   t_vector_alumnos=array[t_alumno] of t_lista_viajes;
@@ -46,13 +51,13 @@ var
   i: t_transporte;
 begin
   for i:= transporte_ini to transporte_fin do
-    vector_precios[i]:=10+random(90);
+    vector_precios[i]:=10+random(91);
 end;
 procedure inicializar_vector_alumnos(var vector_alumnos: t_vector_alumnos);
 var
   i: t_alumno;
 begin
-  for i:= 1 to alumnos_total do
+  for i:= alumno_ini to alumno_fin do
     vector_alumnos[i]:=nil;
 end;
 function random_string(length: int8): string;
@@ -65,22 +70,34 @@ begin
     string_aux:=string_aux+chr(ord('A')+random(26));
   random_string:=string_aux;
 end;
-procedure leer_viaje(var registro_viaje: t_registro_viaje);
+procedure leer_viaje(var registro_viaje1: t_registro_viaje1);
+var
+  i: int32;
 begin
-  registro_viaje.alumno:=alumno_salida+random(100);
-  if (registro_viaje.alumno<>alumno_salida) then
+  i:=random(100000);
+  if (i=0) then
+    registro_viaje1.alumno:=alumno_salida
+  else
+    registro_viaje1.alumno:=alumno_ini+random(alumno_fin);
+  if (registro_viaje1.alumno<>alumno_salida) then
   begin
-    registro_viaje.dia:=dia_ini+random(dia_fin);
-    registro_viaje.facultad:=random_string(1+random(10));
-    registro_viaje.transporte:=transporte_ini+random(transporte_fin);
+    registro_viaje1.dia:=dia_ini+random(dia_fin);
+    registro_viaje1.facultad:=random_string(6+random(6));
+    registro_viaje1.transporte:=transporte_ini+random(transporte_fin);
   end;
 end;
-procedure agregar_ordenado_lista_viajes(var lista_viajes: t_lista_viajes; registro_viaje: t_registro_viaje);
+procedure cargar_registro_viaje2(var registro_viaje2: t_registro_viaje2; registro_viaje1: t_registro_viaje1);
+begin
+  registro_viaje2.dia:=registro_viaje1.dia;
+  registro_viaje2.facultad:=registro_viaje1.facultad;
+  registro_viaje2.transporte:=registro_viaje1.transporte;
+end;
+procedure agregar_ordenado_lista_viajes(var lista_viajes: t_lista_viajes; registro_viaje1: t_registro_viaje1);
 var
   anterior, actual, nuevo: t_lista_viajes;
 begin
   new(nuevo);
-  nuevo^.ele:=registro_viaje;
+  cargar_registro_viaje2(nuevo^.ele,registro_viaje1);
   anterior:=lista_viajes; actual:=lista_viajes;
   while ((actual<>nil) and (actual^.ele.dia<nuevo^.ele.dia)) do
   begin
@@ -93,24 +110,16 @@ begin
     anterior^.sig:=nuevo;
   nuevo^.sig:=actual;
 end;
-procedure cargar_lista_viajes(var lista_viajes: t_lista_viajes; alumno: t_alumno);
-var
-  registro_viaje: t_registro_viaje;
-begin
-  leer_viaje(registro_viaje);
-  while (registro_viaje.alumno<>alumno_salida) do
-  begin
-    registro_viaje.alumno:=alumno;
-    agregar_ordenado_lista_viajes(lista_viajes,registro_viaje);
-    leer_viaje(registro_viaje);
-  end;
-end;
 procedure cargar_vector_alumnos(var vector_alumnos: t_vector_alumnos);
 var
-  i: t_alumno;
+  registro_viaje1: t_registro_viaje1;
 begin
-  for i:= 1 to alumnos_total do
-    cargar_lista_viajes(vector_alumnos[i],i);
+  leer_viaje(registro_viaje1);
+  while (registro_viaje1.alumno<>alumno_salida) do
+  begin
+    agregar_ordenado_lista_viajes(vector_alumnos[registro_viaje1.alumno],registro_viaje1);
+    leer_viaje(registro_viaje1);
+  end;
 end;
 procedure inicializar_vector_transportes(var vector_transportes: t_vector_transportes);
 var
@@ -118,6 +127,31 @@ var
 begin
   for i:= transporte_ini to transporte_fin do
     vector_transportes[i]:=0;
+end;
+procedure procesar_lista_viajes(lista_viajes: t_lista_viajes; vector_precios: t_vector_precios; var cumple_viajes, cumple_gasto: boolean; var vector_transportes1, vector_transportes2: t_vector_transportes);
+var
+  dia: t_dia;
+  viajes_dia: int16;
+  gasto_dia: real;
+begin
+  while (lista_viajes<>nil) do
+  begin
+    dia:=lista_viajes^.ele.dia;
+    viajes_dia:=0;
+    gasto_dia:=0;
+    while ((lista_viajes<>nil) and (lista_viajes^.ele.dia=dia)) do
+    begin
+      viajes_dia:=viajes_dia+1;
+      gasto_dia:=gasto_dia+vector_precios[lista_viajes^.ele.transporte];
+      vector_transportes1[lista_viajes^.ele.transporte]:=vector_transportes1[lista_viajes^.ele.transporte]+1;
+      vector_transportes2[lista_viajes^.ele.transporte]:=vector_transportes2[lista_viajes^.ele.transporte]+1;
+      lista_viajes:=lista_viajes^.sig;
+    end;
+    if ((cumple_viajes<>false) and (viajes_dia<=viajes_corte)) then
+      cumple_viajes:=false;
+    if ((cumple_gasto<>false) and (gasto_dia<=gasto_corte)) then
+      cumple_gasto:=false;
+  end;
 end;
 function cumple_criterio(vector_transportes2: t_vector_transportes): boolean;
 var
@@ -161,40 +195,23 @@ procedure procesar_vector_alumnos(vector_alumnos: t_vector_alumnos; vector_preci
 var
   vector_transportes1, vector_transportes2: t_vector_transportes;
   i: t_alumno;
-  dia: t_dia;
-  viajes_dia: int16;
-  gasto_dia: real;
   cumple_viajes, cumple_gasto: boolean;
 begin
   inicializar_vector_transportes(vector_transportes1);
-  for i:= 1 to alumnos_total do
+  for i:= alumno_ini to alumno_fin do
   begin
-    cumple_viajes:=true; cumple_gasto:=true;
-    inicializar_vector_transportes(vector_transportes2);
-    while (vector_alumnos[i]<>nil) do
+    if (vector_alumnos[i]<>nil) then
     begin
-      dia:=vector_alumnos[i]^.ele.dia;
-      viajes_dia:=0;
-      gasto_dia:=0;
-      while ((vector_alumnos[i]<>nil) and (vector_alumnos[i]^.ele.dia=dia)) do
-      begin
-        viajes_dia:=viajes_dia+1;
-        gasto_dia:=gasto_dia+vector_precios[vector_alumnos[i]^.ele.transporte];
-        vector_transportes1[vector_alumnos[i]^.ele.transporte]:=vector_transportes1[vector_alumnos[i]^.ele.transporte]+1;
-        vector_transportes2[vector_alumnos[i]^.ele.transporte]:=vector_transportes2[vector_alumnos[i]^.ele.transporte]+1;
-        vector_alumnos[i]:=vector_alumnos[i]^.sig;
-      end;
-      if ((cumple_viajes<>false) and (viajes_dia<=viajes_corte)) then
-        cumple_viajes:=false;
-      if ((cumple_gasto<>false) and (gasto_dia<=gasto_corte)) then
-        cumple_gasto:=false;
+      cumple_viajes:=true; cumple_gasto:=true;
+      inicializar_vector_transportes(vector_transportes2);
+      procesar_lista_viajes(vector_alumnos[i],vector_precios,cumple_viajes,cumple_gasto,vector_transportes1,vector_transportes2);
+      if (cumple_viajes=true) then
+        alumnos_corte_viajes:=alumnos_corte_viajes+1;
+      if (cumple_gasto=true) then
+        alumnos_corte_gasto:=alumnos_corte_gasto+1;
+      if ((vector_transportes2[transporte_corte]<>0) and (cumple_criterio(vector_transportes2)=true)) then
+        alumnos_transportes:=alumnos_transportes+1;
     end;
-    if (cumple_viajes=true) then
-      alumnos_corte_viajes:=alumnos_corte_viajes+1;
-    if (cumple_gasto=true) then
-      alumnos_corte_gasto:=alumnos_corte_gasto+1;
-    if ((vector_transportes2[transporte_corte]<>0) and (cumple_criterio(vector_transportes2)=true)) then
-      alumnos_transportes:=alumnos_transportes+1;
   end;
   procesar_vector_transportes1(vector_transportes1,transporte_max1,transporte_max2);
 end;
@@ -215,6 +232,6 @@ begin
   procesar_vector_alumnos(vector_alumnos,vector_precios,alumnos_corte_viajes,alumnos_corte_gasto,alumnos_transportes,transporte_max1,transporte_max2);
   textcolor(green); write('La cantidad de alumnos que realizan más de '); textcolor(yellow); write(viajes_corte); textcolor(green); write(' viajes por día es '); textcolor(red); writeln(alumnos_corte_viajes);
   textcolor(green); write('La cantidad de alumnos que gastan en transporte más de $'); textcolor(yellow); write(gasto_corte); textcolor(green); write(' por día es '); textcolor(red); writeln(alumnos_corte_gasto);
-  textcolor(green); write('Los dos medios de transporte más utilizados son '); textcolor(red); write(transporte_max1); textcolor(green); write(' y '); textcolor(red); write(transporte_max2); textcolor(green); writeln(', respectivamente');
+  textcolor(green); write('Los dos medios de transporte más utilizados son '); textcolor(red); write(transporte_max1); textcolor(green); write(' y '); textcolor(red); writeln(transporte_max2);
   textcolor(green); write('La cantidad de alumnos que combinan bicicleta con algún otro medio de transporte es '); textcolor(red); write(alumnos_transportes);
 end.

@@ -50,12 +50,19 @@ begin
   random_string:=string_aux;
 end;
 procedure leer_usuario(var registro_usuario: t_registro_usuario);
+var
+  vector_emails: array[1..3] of string=('@gmail.com', '@hotmail.com', '@yahoo.com');
+  i: int8;
 begin
-  registro_usuario.nombre:=random_string(1+random(10));
-  registro_usuario.email:=random_string(1+random(10));
+  registro_usuario.nombre:=random_string(5+random(6));
+  registro_usuario.email:=random_string(5+random(6))+vector_emails[1+random(3)];
   registro_usuario.rol:=rol_ini+random(rol_fin);
-  registro_usuario.revista:=revista_corte+random_string(random(10));
-  registro_usuario.dias:=random(high(int16));
+  i:=random(100);
+  if (i=0) then
+    registro_usuario.revista:=revista_corte
+  else
+    registro_usuario.revista:=random_string(5+random(6));
+  registro_usuario.dias:=1+random(high(int16));
 end;
 procedure cargar_vector_usuarios(var vector_usuarios: t_vector_usuarios);
 var
@@ -148,5 +155,5 @@ begin
   if (lista_usuarios<>nil) then
     imprimir_lista_usuarios(lista_usuarios);
   imprimir_vector_roles(vector_roles);
-  textcolor(green); write('Los emails de los dos usuarios que hace más tiempo que no ingresan al portal son '); textcolor(red); write(email_max1); textcolor(green); write(' y '); textcolor(red); write(email_max2); textcolor(green); write(', respectivamente');
+  textcolor(green); write('Los emails de los dos usuarios que hace más tiempo que no ingresan al portal son '); textcolor(red); write(email_max1); textcolor(green); write(' y '); textcolor(red); write(email_max2);
 end.

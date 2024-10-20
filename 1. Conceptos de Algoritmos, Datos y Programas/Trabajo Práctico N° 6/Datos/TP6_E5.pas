@@ -26,20 +26,31 @@ type
     ele: t_registro_producto;
     sig: t_lista_productos;
   end;
-procedure leer_producto(var registro_producto: t_registro_producto);
+function random_string(length: int8): string;
+var
+  i: int8;
+  string_aux: string;
 begin
-  textcolor(green); write('Introducir código de producto del producto: ');
-  textcolor(yellow); readln(registro_producto.producto);
+  string_aux:='';
+  for i:= 1 to length do
+    string_aux:=string_aux+chr(ord('A')+random(26));
+  random_string:=string_aux;
+end;
+procedure leer_producto(var registro_producto: t_registro_producto);
+var
+  i: int8;
+begin
+  i:=random(100);
+  if (i=0) then
+    registro_producto.producto:=producto_salida
+  else
+    registro_producto.producto:=1+random(high(int16));
   if (registro_producto.producto<>producto_salida) then
   begin
-    textcolor(green); write('Introducir descripción del producto: ');
-    textcolor(yellow); readln(registro_producto.descripcion);
-    textcolor(green); write('Introducir stock actual del producto: ');
-    textcolor(yellow); readln(registro_producto.stock_actual);
-    textcolor(green); write('Introducir stock mínimo del producto: ');
-    textcolor(yellow); readln(registro_producto.stock_minimo);
-    textcolor(green); write('Introducir precio del producto: ');
-    textcolor(yellow); readln(registro_producto.precio);
+    registro_producto.descripcion:=random_string(5+random(6));
+    registro_producto.stock_actual:=1+random(high(int16));
+    registro_producto.stock_minimo:=1+random(high(int16));
+    registro_producto.precio:=1+random(100);
   end;
 end;
 procedure agregar_adelante_lista_productos(var lista_productos: t_lista_productos; registro_producto: t_registro_producto);
@@ -106,7 +117,7 @@ begin
       productos_debajo:=productos_debajo+1;
     if (contar_pares(lista_productos^.ele.producto)=true) then
     begin
-      textcolor(green); write('La descripción es este producto con código compuesto por, al menos, tres dígitos pares es '); textcolor(red); writeln(lista_productos^.ele.descripcion);
+      textcolor(green); write('La descripción es este producto con código compuesto por, al menos, '); textcolor(yellow); write(pares_corte); textcolor(green); write(' dígitos pares es '); textcolor(red); writeln(lista_productos^.ele.descripcion);
     end;
     actualizar_minimos(lista_productos^.ele.precio,lista_productos^.ele.producto,precio_min1,precio_min2,producto_min1,producto_min2);
     lista_productos:=lista_productos^.sig;
@@ -118,6 +129,7 @@ var
   producto_min1, producto_min2: int16;
   porcentaje_debajo: real;
 begin
+  randomize;
   lista_productos:=nil;
   porcentaje_debajo:=0;
   producto_min1:=0; producto_min2:=0;
@@ -126,6 +138,6 @@ begin
   begin
     procesar_lista_productos(lista_productos,porcentaje_debajo,producto_min1,producto_min2);
     textcolor(green); write('El porcentaje de productos con stock actual por debajo de su stock mínimo es '); textcolor(red); write(porcentaje_debajo:0:2); textcolor(green); writeln('%');
-    textcolor(green); write('Los códigos de los dos productos más econónomicos son '); textcolor(red); write(producto_min1); textcolor(green); write(' y '); textcolor(red); write(producto_min2); textcolor(green); write(', respectivamente');
+    textcolor(green); write('Los códigos de los dos productos más econónomicos son '); textcolor(red); write(producto_min1); textcolor(green); write(' y '); textcolor(red); write(producto_min2);
   end;
 end.
