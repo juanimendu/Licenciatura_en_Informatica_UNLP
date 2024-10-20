@@ -1,0 +1,17 @@
+		.data
+CADENA:		.asciiz	"adbdcdedfdgdhdid"
+CAR:		.asciiz	"d"
+CANT:		.word 0
+
+		.code
+		dadd r1, r0, r0
+		dadd r2, r0, r0
+		lbu r3, CAR(r0)
+LAZO:		lbu r4, CADENA(r1)
+		beqz r4, FIN
+		bne r3, r4, NOIGUAL
+		daddi r2, r2, 1
+NOIGUAL:	daddi r1, r1, 1
+		j LAZO
+FIN:		sd r2, CANT(r0)
+		halt

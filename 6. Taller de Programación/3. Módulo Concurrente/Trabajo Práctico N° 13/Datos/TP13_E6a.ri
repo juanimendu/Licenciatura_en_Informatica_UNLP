@@ -1,0 +1,222 @@
+programa TP13_E6a
+procesos
+  proceso juntarFloresPapeles (E rob : numero ; ES flores : numero ; ES papeles : numero)
+  comenzar
+    si ((rob = 1) | (rob = 2))
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+        flores := flores + 1
+    si ((rob = 2) | (rob = 3))
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+        papeles := papeles + 1
+  fin
+  proceso recorrerCalle (E rob : numero ; E flores : numero ; E papeles : numero)
+  comenzar
+    si ((rob = 1) | (rob = 2))
+      mientras ((flores > 0) & (PosAv < 100))
+        depositarFlor
+        flores := flores - 1
+        mover
+      si (flores > 0)
+        depositarFlor
+    si ((rob = 2) | (rob = 3))
+      mientras ((papeles > 0) & (PosAv < 100))
+        depositarPapel
+        papeles := papeles - 1
+        mover
+      si (papeles > 0)
+        depositarPapel
+  fin
+areas
+  areaPC1 : AreaPC(2,2,16,16)
+  areaPC2 : AreaPC(1,20,100,22)
+  areaF : AreaP(1,1,1,1)
+robots
+  robot recolector1
+  variables
+    flores, papeles, rob, ca : numero
+  comenzar
+    flores := 0
+    papeles := 0
+    rob := 1
+    repetir 6
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    derecha
+    repetir 2
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    juntarFloresPapeles(rob,flores,papeles)
+    BloquearEsquina(5,8)
+    mover
+    juntarFloresPapeles(rob,flores,papeles)
+    mover
+    LiberarEsquina(5,8)
+    repetir 2
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    derecha
+    repetir 2
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    juntarFloresPapeles(rob,flores,papeles)
+    BloquearEsquina(8,5)
+    mover
+    juntarFloresPapeles(rob,flores,papeles)
+    mover
+    LiberarEsquina(8,5)
+    repetir 2
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    derecha
+    repetir 6
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    EnviarMensaje(rob,robotF)
+    repetir 2
+      derecha
+    RecibirMensaje(ca,robotF)
+    Pos (1,ca)
+    recorrerCalle(rob,flores,papeles)
+  fin
+  robot recolector2
+  variables
+    flores, papeles, rob, ca : numero
+  comenzar
+    flores := 0
+    papeles := 0
+    rob := 2
+    repetir 2
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    juntarFloresPapeles(rob,flores,papeles)
+    BloquearEsquina(5,8)
+    mover
+    juntarFloresPapeles(rob,flores,papeles)
+    mover
+    LiberarEsquina(5,8)
+    repetir 6
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    derecha
+    repetir 3
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    juntarFloresPapeles(rob,flores,papeles)
+    BloquearEsquina(9,15)
+    mover
+    juntarFloresPapeles(rob,flores,papeles)
+    mover
+    LiberarEsquina(9,15)
+    repetir 5
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    derecha
+    repetir 5
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    juntarFloresPapeles(rob,flores,papeles)
+    BloquearEsquina(15,9)
+    mover
+    juntarFloresPapeles(rob,flores,papeles)
+    mover
+    LiberarEsquina(15,9)
+    repetir 3
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    derecha
+    repetir 6
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    juntarFloresPapeles(rob,flores,papeles)
+    BloquearEsquina(8,5)
+    mover
+    juntarFloresPapeles(rob,flores,papeles)
+    mover
+    LiberarEsquina(8,5)
+    repetir 2
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    EnviarMensaje(rob,robotF)
+    repetir 2
+      derecha
+    RecibirMensaje(ca,robotF)
+    Pos (1,ca)
+    recorrerCalle(rob,flores,papeles)
+  fin
+  robot recolector3
+  variables
+    flores, papeles, rob, ca: numero
+  comenzar
+    flores := 0
+    papeles := 0
+    rob := 3
+    repetir 5
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    juntarFloresPapeles(rob,flores,papeles)
+    BloquearEsquina(9,15)
+    mover
+    juntarFloresPapeles(rob,flores,papeles)
+    mover
+    LiberarEsquina(9,15)
+    derecha
+    repetir 7
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    derecha
+    repetir 7
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    derecha
+    juntarFloresPapeles(rob,flores,papeles)
+    BloquearEsquina(15,9)
+    mover
+    juntarFloresPapeles(rob,flores,papeles)
+    mover
+    LiberarEsquina(15,9)
+    repetir 5
+      juntarFloresPapeles(rob,flores,papeles)
+      mover
+    EnviarMensaje(rob,robotF)
+    repetir 2
+      derecha
+    RecibirMensaje(ca,robotF)
+    Pos (1,ca)
+    recorrerCalle(rob,flores,papeles)
+  fin
+  robot fiscalizador
+  variables
+    ca, rob : numero
+  comenzar
+    ca := 20
+    repetir 3
+      RecibirMensaje(rob,*)
+      si (rob = 1)
+        EnviarMensaje(ca,robot1)
+      sino
+        si (rob = 2)
+          EnviarMensaje(ca,robot2)
+        sino
+          EnviarMensaje(ca,robot3)
+      ca := ca + 1
+  fin
+variables
+  robot1 : recolector1
+  robot2 : recolector2
+  robot3 : recolector3
+  robotF : fiscalizador
+comenzar
+  AsignarArea(robot1,areaPC1)
+  AsignarArea(robot1,areaPC2)
+  AsignarArea(robot2,areaPC1)
+  AsignarArea(robot2,areaPC2)
+  AsignarArea(robot3,areaPC1)
+  AsignarArea(robot3,areaPC2)
+  AsignarArea(robotF,areaF)
+  Iniciar(robot1,2,2)
+  Iniciar(robot2,5,5)
+  Iniciar(robot3,9,9)
+  Iniciar(robotF,1,1)
+fin

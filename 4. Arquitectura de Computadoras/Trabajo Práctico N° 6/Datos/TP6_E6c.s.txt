@@ -1,0 +1,53 @@
+		.data
+CONTROL:	.word 0x10000
+DATA:		.word 0x10008
+COORX:		.byte 0
+COORY:		.byte 0
+COLOR:		.byte 0, 0, 0, 0
+MSJ1:		.asciiz "INTRODUCIR COORDENADA X:\n"
+MSJ2:		.asciiz "INTRODUCIR COORDENADA Y:\n"
+MSJ3:		.asciiz "INTRODUCIR RGBA:\n"
+
+		.code
+		ld $s0, CONTROL($0)
+		ld $s1, DATA($0)
+		daddi $t1, $0, MSJ1
+		sd $t1, 0($s1)
+		daddi $t0, $0, 4
+		sd $t0, 0($s0)
+		daddi $t0, $0, 8
+		sb $t0, 0($s0)
+		lbu $t2, 0($s1)
+		sb $t2, COORX($0)
+		daddi $t1, $0, MSJ2
+		sd $t1, 0($s1)
+		daddi $t0, $0, 4
+		sd $t0, 0($s0)
+		daddi $t0, $0, 8
+		sb $t0, 0($s0)
+		lbu $t2, 0($s1)
+		sb $t2, COORY($0)
+		daddi $t1, $0, MSJ3
+		sd $t1, 0($s1)
+		daddi $t0, $0, 4
+		sd $t0, 0($s0)
+		daddi $a0, $0, 0
+		daddi $a1, $0, 4
+LAZO:		daddi $t0, $0, 8
+		sb $t0, 0($s0)
+		lbu $t2, 0($s1)
+		sb $t2, COLOR($a0)
+		daddi $a1, $a1, -1
+		daddi $a0, $a0, 1
+		bnez $a1, LAZO
+		daddi $t0, $0, 7
+		sd $t0, 0($s0)
+		lbu $t0, COORX($0)
+		sb $t0, 5($s1)
+		lbu $t1, COORY($0)
+		sb $t1, 4($s1)
+		lwu $t2, COLOR($0)
+		sw $t2, 0($s1)
+		daddi $t0, $0, 5
+		sd $t0, 0($s0)
+		halt

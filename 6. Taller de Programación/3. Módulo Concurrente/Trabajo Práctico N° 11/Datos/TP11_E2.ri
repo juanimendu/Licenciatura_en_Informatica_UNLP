@@ -1,0 +1,61 @@
+programa TP11_E2
+procesos
+  proceso juntarPapelesEsquina (ES papeles : numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles := papeles + 1
+  fin
+  proceso juntarPapelesArea (E lado : numero)
+  variables
+    papeles : numero
+  comenzar
+    papeles := 0
+    repetir 19
+      juntarPapelesEsquina(papeles)
+      mover
+    juntarPapelesEsquina(papeles)
+    Informar ('Lado_Papeles',lado,papeles)
+  fin
+areas
+  area1 : AreaP(10,10,10,29)
+  area2 : AreaP(10,30,29,30)
+  area3 : AreaP(30,11,30,30)
+  area4 : AreaP(11,10,30,10)
+robots
+  robot tipo1
+  comenzar
+    juntarPapelesArea(1)
+  fin
+  robot tipo2
+  comenzar
+    derecha
+    juntarPapelesArea(2)
+  fin
+  robot tipo3
+  comenzar
+    repetir 2
+      derecha
+    juntarPapelesArea(3)
+  fin
+  robot tipo4
+  comenzar
+    repetir 3
+      derecha
+    juntarPapelesArea(4)
+  fin
+variables
+  robot1 : tipo1
+  robot2 : tipo2
+  robot3 : tipo3
+  robot4 : tipo4
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot4,area4)
+  Iniciar(robot1,10,10)
+  Iniciar(robot2,10,30)
+  Iniciar(robot3,30,30)
+  Iniciar(robot4,30,10)
+fin

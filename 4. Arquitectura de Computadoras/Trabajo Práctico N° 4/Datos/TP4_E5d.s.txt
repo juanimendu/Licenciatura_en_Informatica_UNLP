@@ -1,0 +1,15 @@
+		.data
+CANT:		.word 8
+DATOS:		.word 1, 2, 3, 4, 5, 6, 7, 8
+RES:		.word 0
+
+		.code
+		dadd r1, r0, r0
+		ld r2, CANT(r0)
+LOOP:		ld r3, DATOS(r1)
+		daddi r2, r2, -1
+		dsll r3, r3, 1
+		sd r3, RES(r1)
+		bnez r2, LOOP
+		daddi r1, r1, 8
+		halt

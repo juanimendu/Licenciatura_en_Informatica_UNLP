@@ -1,0 +1,69 @@
+programa TP15_E5
+areas
+  areaC : AreaC(100,1,100,1)
+  area1 : AreaP(10,1,10,1)
+  area2 : AreaP(11,1,11,1)
+  area3 : AreaP(12,1,12,1)
+  areaS : AreaP(13,1,13,1)
+robots
+  robot servidor
+  variables
+    avIni, caIni, papeles, rob : numero
+  comenzar
+    avIni := PosAv
+    caIni := PosCa
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    repetir 12
+      RecibirMensaje(rob,*)
+      Random(papeles,1,5)
+      BloquearEsquina(100,1)
+      Pos (100,1)
+      repetir papeles
+        depositarPapel
+      Pos (avIni,caIni)
+      LiberarEsquina(100,1)
+      si (rob = 1)
+        EnviarMensaje(papeles,robot1)
+      sino
+        si (rob = 2)
+          EnviarMensaje(papeles,robot2)
+        sino
+          EnviarMensaje(papeles,robot3)
+  fin
+  robot cliente
+  variables
+    avIni, caIni, papeles, rob : numero
+  comenzar
+    avIni := PosAv
+    caIni := PosCa
+    RecibirMensaje(rob,robotS)
+    repetir 4
+      EnviarMensaje(rob,robotS)
+      RecibirMensaje(papeles,robotS)
+      repetir papeles
+        BloquearEsquina(100,1)
+        Pos (100,1)
+        tomarPapel
+        Pos (avIni,caIni)
+        LiberarEsquina(100,1)
+        depositarPapel
+  fin
+variables
+  robot1, robot2, robot3 : cliente
+  robotS : servidor
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot1,areaC)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot2,areaC)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot3,areaC)
+  AsignarArea(robotS,areaS)
+  AsignarArea(robotS,areaC)
+  Iniciar(robot1,10,1)
+  Iniciar(robot2,11,1)
+  Iniciar(robot3,12,1)
+  Iniciar(robotS,13,1)
+fin

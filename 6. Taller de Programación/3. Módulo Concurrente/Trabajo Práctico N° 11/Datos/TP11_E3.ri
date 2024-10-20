@@ -1,0 +1,71 @@
+programa TP11_E3
+procesos
+  proceso contarFloresEsquina (ES flores : numero)
+  variables
+    flores_esq : numero
+  comenzar
+    flores_esq := 0
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+      flores_esq := flores_esq + 1
+    repetir flores_esq
+      depositarFlor
+  fin
+  proceso contarPapelesEsquina (ES papeles : numero)
+  variables
+    papeles_esq : numero
+  comenzar
+    papeles_esq := 0
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles := papeles + 1
+      papeles_esq := papeles_esq + 1
+    repetir papeles_esq
+      depositarPapel
+  fin
+  proceso escalon (ES flores : numero ; ES papeles : numero ; E pasos : numero)
+  comenzar
+    repetir 2
+      repetir pasos
+        contarFloresEsquina(flores)
+        contarPapelesEsquina(papeles)
+        mover
+      derecha
+    repetir 2
+      derecha
+  fin
+  proceso escalera (ES escalones : numero)
+  variables
+    flores, papeles, pasos : numero
+  comenzar
+    pasos := 1
+    repetir 4
+      flores := 0
+      papeles := 0
+      escalon(flores,papeles,pasos)
+      pasos := pasos + 1
+      si (papeles > flores)
+        escalones := escalones + 1
+  fin
+areas
+  ciudad : AreaC(1,1,100,100)
+robots
+  robot tipo1
+  variables
+    escalones : numero
+  comenzar
+    cant := 0
+    escalera(escalones)
+    Informar ('EscalonesConMásPapeles',escalones)
+  fin
+variables
+  robot1, robot2, robot3 : tipo1
+comenzar
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot2,ciudad)
+  AsignarArea(robot3,ciudad)
+  Iniciar(robot1,12,14)
+  Iniciar(robot2,17,10)
+  Iniciar(robot3,22,6)
+fin

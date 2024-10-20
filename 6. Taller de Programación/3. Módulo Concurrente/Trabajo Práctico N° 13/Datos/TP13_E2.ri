@@ -1,0 +1,170 @@
+programa TP13_E2
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso juntarFloresEsquina (ES flores : numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+  fin
+  proceso juntarPapelesEsquina (ES papeles : numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles := papeles + 1
+  fin
+  proceso escaleraDecF (ES flores : numero)
+  variables
+    pasos : numero
+  comenzar
+    pasos := 5
+    juntarFloresEsquina(flores)
+    repetir 4
+      repetir pasos
+        mover
+      juntarFloresEsquina(flores)
+      derecha
+      repetir pasos
+        mover
+      juntarFloresEsquina(flores)
+      izquierda
+      pasos := pasos - 1
+  fin
+  proceso escalonCompF (ES flores : numero ; E rob : numero)
+  comenzar
+    mover
+    juntarFloresEsquina(flores)
+    derecha
+    BloquearEsquina(16,16)
+    mover
+    EnviarMensaje(rob,robotJ)
+    juntarFloresEsquina(flores)
+    repetir 2
+      derecha
+    mover
+    LiberarEsquina(16,16)
+  fin
+  proceso escaleraCrecF (ES flores : numero)
+  variables
+    pasos : numero
+  comenzar
+    pasos := 2
+    repetir 4
+      repetir pasos
+        mover
+      juntarFloresEsquina(flores)
+      derecha
+      repetir pasos
+        mover
+      juntarFloresEsquina(flores)
+      izquierda
+      pasos := pasos + 1
+  fin
+  proceso escaleraDecP (ES papeles : numero)
+  variables
+    pasos : numero
+  comenzar
+    pasos := 5
+    juntarPapelesEsquina(papeles)
+    repetir 4
+      repetir pasos
+        mover
+      juntarPapelesEsquina(papeles)
+      izquierda
+      repetir pasos
+        mover
+      juntarPapelesEsquina(papeles)
+      derecha
+      pasos := pasos - 1
+  fin
+  proceso escalonCompP (ES papeles : numero ; E rob : numero)
+  comenzar
+    mover
+    juntarPapelesEsquina(papeles)
+    izquierda
+    BloquearEsquina(16,16)
+    mover
+    EnviarMensaje(rob,robotJ)
+    juntarPapelesEsquina(papeles)
+    repetir 2
+      derecha
+    mover
+    LiberarEsquina(16,16)
+  fin
+  proceso escaleraCrecP (ES papeles : numero)
+  variables
+    pasos : numero
+  comenzar
+    pasos := 2
+    repetir 4
+      repetir pasos
+        mover
+      juntarPapelesEsquina(papeles)
+      izquierda
+      repetir pasos
+        mover
+      juntarPapelesEsquina(papeles)
+      derecha
+      pasos := pasos + 1
+  fin
+areas
+  areaPC : AreaPC(16,16,16,16)
+  areaF : AreaPC(1,1,15,30)
+  areaP : AreaP(17,1,31,30)
+robots
+  robot tipo1
+  variables
+    flores, rob : numero
+  comenzar
+    flores := 0
+    RecibirMensaje(rob,robotJ)
+    escaleraDecF(flores)
+    escalonCompF(flores,rob)
+    escaleraCrecF(flores)
+    Informar('Flores',flores)
+    EnviarMensaje(V,robotJ)
+  fin
+  robot tipo2
+  variables
+    papeles, rob : numero
+  comenzar
+    papeles := 0
+    RecibirMensaje(rob,robotJ)
+    escaleraDecP(papeles)
+    escalonCompP(papeles,rob)
+    escaleraCrecP(papeles)
+    Informar('Papeles',papeles)
+    EnviarMensaje(V,robotJ)
+  fin
+  robot jefe
+  variables
+    termino : boolean
+    rob, robGanador : numero
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    RecibirMensaje(rob,*)
+    robGanador := rob
+    RecibirMensaje(rob,*)
+    repetir 2
+      RecibirMensaje(termino,*)
+    Informar ('RobotGanador',robGanador)
+  fin
+variables
+  robot1 : tipo1
+  robot2 : tipo2
+  robotJ : jefe
+comenzar
+  AsignarArea(robot1,areaPC)
+  AsignarArea(robot1,areaF)
+  AsignarArea(robot2,areaPC)
+  AsignarArea(robot2,areaP)
+  AsignarArea(robotJ,areaF)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,31,1)
+  Iniciar(robotJ,15,1)
+fin

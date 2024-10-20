@@ -1,0 +1,33 @@
+			.data
+TABLA:			.word 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+M:			.word 5
+TAM:			.word 10
+RES:			.word 0
+
+			.code
+			daddi $sp, $0, 0x400
+			ld $a0, M($0)
+			ld $a1, TAM($0)
+			daddi $a2, $0, TABLA
+			daddi $a0, $a0, 1
+			jal EMPEZAR
+			sd $v0, RES($0)
+			halt
+
+EMPEZAR:		daddi $sp, $sp, -16
+			sd $ra, 0($sp)
+			sd $s2, 8($sp)
+			dadd $t0, $a1, $0
+			dadd $s2, $a2, $0
+			dadd $v0, $0, $0
+LAZO:			ld $t1, 0($s2)
+			slt $t2, $t1, $a0
+			bnez $t2, MENOR
+			daddi $v0, $v0, 1
+MENOR:			daddi $t0, $t0, -1
+			daddi $s2, $s2, 8
+			bnez $t0, LAZO
+			ld $ra, 0($sp)
+			ld $s2, 8($sp)
+			daddi $sp, $sp, 16
+			jr $ra

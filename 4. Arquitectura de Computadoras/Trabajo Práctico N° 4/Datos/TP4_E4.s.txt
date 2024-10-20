@@ -1,0 +1,18 @@
+		.data
+TABLA:		.word 20, 1, 14, 3, 2, 58, 18, 7, 12, 11
+NUM:		.word 7
+LONG:		.word 10
+
+		.code
+		ld r1, LONG(r0)
+		ld r2, NUM(r0)
+		dadd r3, r0, r0
+		dadd r10, r0, r0
+LOOP:		ld r4, TABLA(r3)
+		beq r4, r2, LISTO
+		daddi r1, r1, -1
+		daddi r3, r3, 8
+		bnez r1, LOOP
+		j FIN
+LISTO:		daddi r10, r0, 1
+FIN:		halt

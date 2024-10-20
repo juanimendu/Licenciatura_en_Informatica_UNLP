@@ -1,0 +1,24 @@
+		.data
+A:		.word 1
+B:		.word 2
+C:		.word 3
+D:		.word 0
+
+		.code
+		ld r1, A(r0)
+		ld r2, B(r0)
+		ld r3, C(r0)
+		dadd r4, r0, r0
+		bne r1, r2, NOIGUAL1
+		daddi r4, r4, 1
+NOIGUAL1:	bne r1, r3, NOIGUAL2
+		daddi r4, r4, 1
+		j fin2
+NOIGUAL2:	bnez r4, FIN2
+		bne r2, r3, FIN3
+		daddi r4, r4, 2
+		j FIN3
+FIN1:		beqz r4, FIN2
+FIN2:		daddi r4, r4, 1
+FIN3: 		sd r4, D(r0)
+		halt

@@ -1,0 +1,48 @@
+				.data
+CONTROL:			.word 0x10000
+DATA:				.word 0x10008
+BASE:				.word 0.0
+EXP:				.word 0
+RES:				.double 0
+UNO:				.double 1.0
+MSJ1:				.asciiz "BASE en Flotante: \n"
+MSJ2:				.asciiz "EXPONENTE en BSS: \n"
+MSJ3:				.asciiz "RESULTADO:\n"
+
+				.code
+				ld $s0, CONTROL($0)
+				ld $s1, DATA($0)
+				daddi $t1, $0, MSJ1
+				sd $t1, 0($s1)
+				daddi $t0, $0, 4
+				sd $t0, 0($s0)
+				daddi $t0, $0, 8
+				sd $t0, 0($s0)
+				l.d f1, 0($s1)
+				s.d f1, BASE($0)
+				daddi $t1, $0, MSJ2
+				sd $t1, 0($s1)
+				daddi $t0, $0, 4
+				sd $t0, 0($s0)
+				daddi $t0, $0, 8
+				sd $t0, 0($s0)
+				ld $a0, 0($s1)
+				sd $a0, EXP($0)
+				jal A_LA_POTENCIA
+				s.d f2, RES($0)
+				daddi $t1, $0, MSJ3
+				sd $t1, 0($s1)
+				daddi $t0, $0, 4
+				sd $t0, 0($s0)
+				s.d f2, 0($s1)
+				daddi $t0, $0, 3
+				sd $t0, 0($s0)
+				halt
+
+A_LA_POTENCIA:			l.d f2, UNO($0)
+				dadd $t0, $a0, $0
+LAZO:				beqz $t0, FIN
+				mul.d f2, f2, f1
+				daddi $t0, $t0, -1
+				j LAZO
+FIN:				jr $ra

@@ -1,0 +1,100 @@
+programa TP13_E3
+procesos
+  proceso accederEsquina(ES flores : numero ; E av : numero ; E ca : numero)
+  variables
+    avIni, caIni : numero
+  comenzar
+    avIni := PosAv
+    caIni := PosCa
+    BloquearEsquina(av,ca)
+    Pos (av,ca)
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+      Pos (avIni,caIni)
+      LiberarEsquina(av,ca)
+      BloquearEsquina(av,ca)
+      Pos (av,ca)
+    Pos (avIni,caIni)
+    LiberarEsquina(av,ca)
+  fin
+  proceso actualizarMax (E flores : numero ; ES floresMax : numero ; E rob : numero ; ES robMax : numero)
+  comenzar
+    si (flores > floresMax)
+      floresMax := flores
+      robMax := rob
+  fin
+areas
+  areaPC: AreaPC(2,2,10,10)
+  area1: AreaP(2,1,2,1)
+  area2: AreaP(3,1,3,1)
+  area3: AreaP(4,1,4,1)
+  area4: AreaP(5,1,5,1)
+  areaJ: AreaP(1,1,1,1)
+robots
+  robot recolector
+  variables
+    av, ca, flores, rob : numero
+  comenzar
+    flores := 0
+    RecibirMensaje(rob,robotJ)
+    RecibirMensaje(av,robotJ)
+    RecibirMensaje(ca,robotJ)
+    accederEsquina(flores,av,ca)
+    EnviarMensaje(rob,robotJ)
+    EnviarMensaje(flores,robotJ)
+  fin
+  robot jefe
+  variables
+    av, ca, flores, floresMax, rob, robMax : numero
+  comenzar
+    floresMax := 0
+    robMax := 0
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    EnviarMensaje(4,robot4)
+    Random(av,2,10)
+    Random(ca,2,10)
+    EnviarMensaje(av,robot1)
+    EnviarMensaje(ca,robot1)
+    EnviarMensaje(av,robot2)
+    EnviarMensaje(ca,robot2)
+    EnviarMensaje(av,robot3)
+    EnviarMensaje(ca,robot3)
+    EnviarMensaje(av,robot4)
+    EnviarMensaje(ca,robot4)
+    repetir 4
+      RecibirMensaje(rob,*)
+      si (rob = 1)
+        RecibirMensaje(flores,robot1)
+      sino
+        si (rob = 2)
+          RecibirMensaje(flores,robot2)
+        sino
+          si (rob = 3)
+            RecibirMensaje(flores,robot3)
+          sino
+            RecibirMensaje(flores,robot4)
+      actualizarMax(flores,floresMax,rob,robMax)
+    Informar ('RobotGanador',robMax)
+  fin
+variables
+  robot1, robot2, robot3, robot4 : recolector
+  robotJ : jefe
+comenzar
+  AsignarArea(robot1,areaPC)
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,areaPC)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot3,areaPC)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot4,areaPC)
+  AsignarArea(robot4,area4)
+  AsignarArea(robotJ,areaJ)
+  Iniciar(robot1,2,1)
+  Iniciar(robot2,3,1)
+  Iniciar(robot3,4,1)
+  Iniciar(robot4,5,1)
+  Iniciar(robotJ,1,1)
+fin

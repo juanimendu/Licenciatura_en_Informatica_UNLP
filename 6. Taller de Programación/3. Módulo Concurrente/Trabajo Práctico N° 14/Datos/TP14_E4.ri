@@ -1,0 +1,99 @@
+programa TP14_E4
+procesos
+  proceso recogerFlores
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso recogerPapeles
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso vaciarBolsa
+  comenzar
+    mientras (HayPapelEnLaBolsa)
+      depositarPapel
+    mientras (HayFlorEnLaBolsa)
+      depositarFlor
+  fin
+areas
+  areaPC : AreaPC(2,2,100,100)
+  area1 : AreaP(2,1,2,1)
+  area2 : AreaP(3,1,3,1)
+  areaM : AreaP(1,1,1,1)
+robots
+  robot slave
+  variables
+    avIni, caIni, av, ca, tarea : numero
+  comenzar
+    RecibirMensaje(tarea,robotM)
+    avIni := PosAv
+    caIni := PosCa
+    mientras (tarea <> 4)
+      RecibirMensaje(av,robotM)
+      RecibirMensaje(ca,robotM)
+      BloquearEsquina(av,ca)
+      Pos (av,ca)
+      si (tarea = 1) 
+        recogerFlores
+      sino
+        si (tarea = 2)
+          recogerPapeles
+        sino
+          vaciarBolsa
+      Pos (avIni,caIni)
+      LiberarEsquina(av,ca)
+      RecibirMensaje(tarea,robotM)
+  fin
+  robot master
+  variables
+    rob1Act, rob2Act : boolean
+    av, ca, rob, tarea : numero
+  comenzar
+    rob1Act := V
+    rob2Act := V
+    repetir 10
+      rob := 0
+      si ((rob1Act) & (rob1Act))
+        Random(rob,1,2)
+      sino
+        si ((rob1Act) & ~ (rob2Act))
+          rob := 1
+        sino
+          si (rob2Act)
+            rob := 2
+      si (rob <> 0)
+        Random(tarea,1,4)
+        Random(av,2,100)
+        Random(ca,2,100)
+        si (rob = 1)
+          EnviarMensaje(tarea,robot1)
+          EnviarMensaje(av,robot1)
+          EnviarMensaje(ca,robot1)
+          si (tarea = 4)
+            rob1Act := F
+        sino
+          EnviarMensaje(tarea,robot2)
+          EnviarMensaje(av,robot2)
+          EnviarMensaje(ca,robot2)
+          si (tarea = 4)
+            rob2Act := F
+    si (rob1Act)
+      EnviarMensaje(4,robot1)
+    si (rob2Act)
+      EnviarMensaje(4,robot2)
+  fin
+variables
+  robot1, robot2 : slave
+  robotM : master
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot1,areaPC)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot2,areaPC)
+  AsignarArea(robotM,areaM)
+  Iniciar(robot1,2,1)
+  Iniciar(robot2,3,1)
+  Iniciar(robotM,1,1)
+fin

@@ -1,0 +1,27 @@
+		.data
+CONTROL:	.word 0x10000
+DATA:		.word 0x10008
+MSJ:		.asciiz "INTRODUCIR Hola, Mundo!:\n"
+STR:		.asciiz ""
+
+		.code
+		ld $s0, CONTROL($0)
+		ld $s1, DATA($0)
+		daddi $t1, $0, MSJ
+		sd $t1, 0($s1)
+		daddi $t0, $0, 4
+		sd $t0, 0($s0)
+		daddi $t0, $0, 9
+			dadd $t2, $0, $0
+		daddi $t3, $0, 12
+LAZO:		sd $t0, 0($s0)
+		lbu $t1, 0($s1)
+		sb $t1, STR($t2)
+		daddi $t3, $t3, -1
+		daddi $t2, $t2, 1
+		bnez $t3, LAZO
+		daddi $t1, $0, STR
+		sd $t1, 0($s1)
+		daddi $t0, $0, 4
+		sd $t0, 0($s0)
+		halt

@@ -1,0 +1,14 @@
+		.data
+BASE:		.double 5.85
+ALTURA:		.double 13.47
+MEDIO:		.double 0.5
+RES:		.double 0.0
+
+		.code
+		l.d f1, BASE(r0)
+		l.d f2, ALTURA(r0)
+		l.d f4, MEDIO(r0)
+		mul.d f3, f1, f2
+		mul.d f5, f3, f4
+		s.d f5, RES(r0)
+		halt

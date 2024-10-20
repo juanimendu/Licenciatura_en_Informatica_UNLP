@@ -1,0 +1,53 @@
+programa TP11_E1c
+procesos
+  proceso juntarFloresEsquina (ES flores : numero ; ES esquinas : numero)
+  comenzar
+    si (HayFlorEnLaEsquina)
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+        flores := flores + 1
+    sino
+      esquinas := esquinas + 1
+  fin
+  proceso juntarFloresAvenida (ES flores : numero ; ES esquinas : numero)
+  comenzar
+    repetir 99
+      juntarFloresEsquina(flores,esquinas)
+      mover
+    juntarFloresEsquina(flores,esquinas)
+  fin  
+  proceso depositarFlores (E flores: numero)
+  comenzar
+    repetir flores
+      depositarFlor
+  fin
+  proceso recorrerAvenida
+  variables
+    flores, esquinas: numero
+  comenzar
+    flores := 0
+    esquinas := 0
+    juntarFloresAvenida(flores,esquinas)
+    depositarFlores(flores)
+    Informar ('Av_FloresDepositadas,PosAv,flores)
+    Informar ('Av_EsquinasVacías',PosAv,esquinas)
+  fin
+areas
+  area1 : AreaP(1,1,1,100)
+  area2 : AreaP(3,1,3,100)
+  area3 : AreaP(5,1,5,100)
+robots
+  robot tipo1
+  comenzar
+    recorrerAvenida
+  fin
+variables
+  robot1, robot2, robot3 : tipo1
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot3,area3)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,3,1)
+  Iniciar(robot3,5,1)
+fin

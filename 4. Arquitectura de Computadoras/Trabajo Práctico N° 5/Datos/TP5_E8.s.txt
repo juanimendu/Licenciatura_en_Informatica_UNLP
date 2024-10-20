@@ -1,0 +1,36 @@
+		.data
+CAD1:		.asciiz	"abcde"
+CAD2:		.asciiz	"abcd"
+RES:		.word 0
+
+		.code
+		daddi $sp, $0, 0x400
+		daddi $a0, $0, CAD1
+		daddi $a1, $0, CAD2
+		jal COMP
+		sd $v0, RES($0)
+		halt
+
+COMP:		daddi $sp, $sp, -24
+		sd $ra, 0($sp)
+		sd $s0, 8($sp)
+		sd $s1, 16($sp)
+		dadd $s0, $a0, $0
+		dadd $s1, $a1, $0
+		dadd $v0, $0, $0
+LAZO:		lbu $t0, 0($s0)
+		lbu $t1, 0($s1)
+		beqz $t0, FIN1
+		beqz $t1, FIN2
+		bne $t0, $t1, FIN2
+		daddi $v0, $v0, 1
+		daddi $s0, $s0, 1
+		daddi $s1, $s1, 1
+		j LAZO
+FIN1:		bnez $t1, FIN2
+		daddi $v0, $v0, -1
+FIN2:		ld $ra, 0($sp)
+		ld $s0, 8($sp)
+		ld $s1, 16($sp)
+		daddi $sp, $sp, 24
+		jr $ra

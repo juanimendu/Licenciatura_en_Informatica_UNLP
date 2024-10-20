@@ -1,0 +1,110 @@
+programa TP14_E1
+procesos
+  proceso juntarFloresEsquina
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso depositarFloryAvanzar (E flores : numero)
+  comenzar
+    mientras ((flores > 0) & (PosCa < 100))
+      depositarFlor
+      flores := flores - 1
+      mover
+  fin
+areas
+  area1 : AreaPC(1,1,1,100)
+  area2 : AreaPC(2,1,2,100)
+  area3 : AreaPC(3,1,3,100)
+  areaS : AreaP(100,100,100,100)
+robots
+  robot cliente
+  variables
+    ok : boolean
+    av, ca, flores, rob : numero
+  comenzar
+    RecibirMensaje(rob,robotS)
+    mientras (PosCa < 100)
+      Random(flores,1,4)
+      av := PosAv
+      ca := PosCa + 1
+      EnviarMensaje(rob,robotS)
+      EnviarMensaje(flores,robotS)
+      EnviarMensaje(av,robotS)
+      EnviarMensaje(ca,robotS)
+      RecibirMensaje(ok,robotS)
+      Pos (av,ca)
+      juntarFloresEsquina
+      Pos (av,ca-1)
+      depositarFloryAvanzar(flores)
+    EnviarMensaje(rob,robotS)
+    EnviarMensaje(0,robotS)
+  fin
+  robot servidor
+  variables
+    ack : boolean
+    avIni, caIni, av, ca, flores, rob, term : numero
+  comenzar
+    avIni := PosAv
+    caIni := PosCa
+    ack := V
+    terminaron := 0
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    mientras (term < 3)
+      RecibirMensaje(rob,*)
+      si (rob = 1)
+        RecibirMensaje(flores,robot1)
+        si (flores <> 0)
+          RecibirMensaje(av,robot1)
+          RecibirMensaje(ca,robot1)
+          Pos (av,ca)
+          repetir flores
+            depositarFlor
+          Pos (avIni,caIni)
+          EnviarMensaje(ack,robot1)
+        sino
+          term := term + 1
+      sino
+        si (rob = 2)
+          RecibirMensaje(flores,robot2)
+          si (flores <> 0)
+            RecibirMensaje(av,robot2)
+            RecibirMensaje(ca,robot2)
+            Pos (av,ca)
+            repetir flores
+              depositarFlor
+            Pos (avIni,caIni)
+            EnviarMensaje(ack,robot2)
+          sino
+            term := term + 1
+        sino
+          RecibirMensaje(flores,robot3)
+          si (flores <> 0)
+            RecibirMensaje(av,robot3)
+            RecibirMensaje(ca,robot3)
+            Pos (av,ca)
+            repetir flores
+              depositarFlor
+            Pos (avIni,caIni)
+            EnviarMensaje(ack,robot3)
+          sino
+            term := term + 1
+  fin
+variables
+  robot1, robot2, robot3 : cliente
+  robotS : servidor
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot3,area3)
+  AsignarArea(robotS,areaS)
+  AsignarArea(robotS,area1)
+  AsignarArea(robotS,area2)
+  AsignarArea(robotS,area3)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,2,1)
+  Iniciar(robot3,3,1)
+  Iniciar(robotS,100,100)
+fin

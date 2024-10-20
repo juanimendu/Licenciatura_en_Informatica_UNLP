@@ -1,0 +1,41 @@
+			.data 
+CONTROL:		.word 0x10000
+DATA:			.word 0x10008
+MSJ1:			.asciiz "INTRODUCIR DOS NUMEROS ENTEROS:\n"
+MSJ2:			.asciiz "SU SUMA ES IGUAL A:\n"
+
+			.code
+			ld $s0, CONTROL($0)
+			ld $s1, DATA($0)
+			daddi $t1, $0, MSJ1
+			sd $t1, 0($s1)
+			daddi $t0, $0, 4
+			sd $t0, 0($s0)
+			daddi $t3, $0, -99
+			jal INGRESO
+			beq $v0, $t3, FIN1
+			dadd $a0, $v0, $0
+			jal INGRESO
+			beq $v0, $t3, FIN1
+			dadd $a1, $v0, $0
+			jal RESULTADO
+FIN1:			halt
+
+INGRESO:		daddi $v0, $0, -99
+			daddi $t0, $0, 8
+			sd $t0, 0($s0)
+			ld $t1, 0($s1)
+			slti $t2, $t1, 10
+			beqz $t2, FIN2
+			dadd $v0, $t1, $0
+FIN2:			jr $ra
+
+RESULTADO:		daddi $t1, $0, MSJ2
+			sd $t1, 0($s1)
+			daddi $t0, $0, 4
+			sd $t0, 0($s0)
+			dadd $t0, $a0, $a1
+			sd $t0, 0($s1)
+			daddi $t1, $0, 2
+			sd $t1, 0($s0)
+			jr $ra

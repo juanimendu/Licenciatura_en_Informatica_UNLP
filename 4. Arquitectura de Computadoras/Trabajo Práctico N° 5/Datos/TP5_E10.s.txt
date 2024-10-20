@@ -1,0 +1,41 @@
+			.data
+VOCALES:		.asciiz "AEIOUaeiou"
+CADENA:			.ascii "AbCdE"
+RES:			.word 0
+
+			.code
+			daddi $sp, $0, 0x400
+			daddi $a0, $0, CADENA
+			jal CONTAR_VOC
+			sd $v1, RES($0)
+			halt
+
+CONTAR_VOC:		daddi $sp, $sp, -16
+			sd $ra, 0($sp)
+			sd $s0, 8($sp)
+			daddi $a1, $0, VOCALES
+			dadd $v1, $0, $0
+			dadd $s0, $a0, $0
+LAZO1:			lbu $a0, 0($s0)
+			beqz $a0, FIN1
+			jal ES_VOCAL
+			dadd $v1, $v1, $v0
+			daddi $s0, $s0, 1
+			j LAZO1
+FIN1:			ld $ra, 0($sp)
+			ld $s0, 8($sp)
+			jr $ra
+
+ES_VOCAL:		daddi $sp, $sp, -8
+			sd $s1, 0($sp)
+			dadd $v0, $0, $0
+			dadd $s1, $a1, $0
+LAZO2:			lbu $t1, 0($s1)
+			beqz $t1, FIN2
+			beq $a0, $t1, VOCAL
+			daddi $s1, $s1, 1
+			j LAZO2
+VOCAL:			daddi $v0, $v0, 1
+FIN2:			ld $s1, 0($sp)
+			daddi $sp, $sp, 8
+			jr $ra

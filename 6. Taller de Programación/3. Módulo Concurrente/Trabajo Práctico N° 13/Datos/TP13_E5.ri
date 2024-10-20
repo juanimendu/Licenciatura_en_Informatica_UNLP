@@ -1,0 +1,87 @@
+programa TP_E5
+procesos
+  proceso juntarPapelyAvanzar (E av : numero ; ES ca : numero)
+  comenzar
+    BloquearEsquina(11,11)
+    Pos (11,11)
+    mientras ((HayPapelEnLaEsquina) & (PosCa < 100))
+      tomarPapel
+      Pos (av,ca)
+      LiberarEsquina(11,11)
+      depositarPapel
+      mover
+      ca := PosCa
+      BloquearEsquina(11,11)
+      Pos (11,11)
+    Pos (av,ca)
+    LiberarEsquina(11,11)
+  fin
+  proceso actualizarMax (E ca : numero ; ES caMax : numero ; E rob : numero ; ES robMax : numero)
+  comenzar
+    si (ca > caMax)
+      caMax := ca
+      robMax := rob
+  fin
+areas
+  areaPC : AreaPC(11,11,11,11)
+  area1 : AreaP(4,1,4,100)
+  area2 : AreaP(6,1,6,100)
+  area3 : AreaP(8,1,8,100)
+  area4 : AreaP(10,1,10,100)
+  areaC : AreaP(1,1,1,1)
+robots
+  robot corredor
+  variables
+    av, ca, rob : numero
+  comenzar
+    av := PosAv
+    ca := PosCa
+    RecibirMensaje(rob,robotC)
+    juntarPapelyAvanzar(av,ca)
+    EnviarMensaje(rob,robotC)
+    EnviarMensaje(ca,robotC)
+  fin
+  robot coordinador
+  variables
+    ca, caMax, rob, robMax : numero
+  comenzar
+    caMax := 0
+    robMax := 0
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    EnviarMensaje(4,robot4)
+    repetir 4
+      RecibirMensaje(rob,*)
+      si (rob = 1)
+        RecibirMensaje(ca,robot1)
+      sino
+        si(rob = 2)
+          RecibirMensaje(ca,robot2)
+        sino
+          si (rob = 3)
+            RecibirMensaje(ca,robot3)
+          sino
+            RecibirMensaje(ca,robot4)
+      actualizarMax(ca,caMax,rob,robMax)
+    Informar ('RobotQueLlegóMásLejos',robMax)
+  fin
+variables
+  robot1, robot2, robot3, robot4 : corredor
+  robotC : coordinador
+comenzar
+  AsignarArea(robot1,areaPC)
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,areaPC)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot3,areaPC)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot4,areaPC)
+  AsignarArea(robot4,area4)
+  AsignarArea(robotC,areaC)
+  Iniciar(robot1,4,1)
+  Iniciar(robot2,6,1)
+  Iniciar(robot3,8,1)
+  Iniciar(robot4,10,1)
+  Iniciar(robotC,1,1)
+fin

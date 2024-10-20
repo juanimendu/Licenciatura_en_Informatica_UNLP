@@ -1,0 +1,55 @@
+				.data 
+CONTROL:			.word 0x10000
+DATA:				.word 0x10008
+CLAVE:				.asciiz "JUAN"
+MSJ_BIENV:			.asciiz "BIENVENIDO"
+MSJ_ERROR:			.asciiz "ERROR. INTRODUCIR, NUEVAMENTE, LA CLAVE:\n"
+MSJ:				.asciiz "INTRODUCIR UNA CLAVE DE CUATRO CARACTERES:\n"
+
+				.code
+				daddi $sp, $0, 0x400
+				ld $s0, CONTROL($0)
+				ld $s1, DATA($0)
+				daddi $t1, $0, MSJ
+				sd $t1, 0($s1)
+				daddi $t0, $0, 4
+				sd $t0, 0($s0)
+				daddi $a2, $0, CLAVE
+				jal CHAR
+				halt
+
+CHAR:				daddi $sp, $sp, -16
+				sd $ra, 0($sp)
+				sd $s2, 8($sp)
+				daddi $t0, $0, 9
+				dadd $s2, $a2, $0
+				daddi $t3, $0, 4
+				dadd $t4, $0, $0
+LAZO:				sd $t0, 0($s0)
+				lbu $t1, 0($s1)
+				lbu $t5, 0($s2)
+				beq $t1, $t5, NO_SON_IGUALES
+				daddi $t4, $t4, 1
+NO_SON_IGUALES:			daddi $t3, $t3, -1
+				daddi $s2, $s2, 1
+				beqz $t3, FIN1
+				j LAZO
+FIN1:				beq $t4, $t3, FIN2
+				daddi $t6, $0, MSJ_ERROR
+				sd $t6, 0($s1)
+				jal RESPUESTA
+				daddi $t3, $0, 4
+				dadd $t4, $0, $0
+				dadd $s2, $a2, $0
+				j LAZO
+FIN2:				daddi $t6, $0, MSJ_BIENV
+				sd $t6, 0($s1)
+				jal RESPUESTA
+				ld $ra, 0($sp)
+				ld $s2, 8($sp)
+				daddi $sp, $sp, 16
+				jr $ra
+
+RESPUESTA:			daddi $t7, $0, 4
+				sd $t7, 0($s0)
+				jr $ra

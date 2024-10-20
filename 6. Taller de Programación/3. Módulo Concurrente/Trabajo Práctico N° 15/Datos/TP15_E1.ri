@@ -1,0 +1,136 @@
+programa TP15_E1
+procesos
+  proceso juntarFloresEsquina (ES flores : numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+  fin
+  proceso juntarPapelesEsquina (ES papeles : numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles := papeles + 1
+  fin
+  proceso recorrerAvenida (ES flores : numero)
+  comenzar
+    repetir 96
+      juntarFloresEsquina(flores)
+      mover
+    juntarFloresEsquina(flores)
+    BloquearEsquina(PosAv,98)
+    mover
+    juntarFloresEsquina(flores)
+    BloquearEsquina(PosAv,99)
+    mover
+    LiberarEsquina(PosAv,98)
+    juntarFloresEsquina(flores)
+    mover
+    LiberarEsquina(PosAv,99)
+    juntarFloresEsquina(flores)
+  fin
+  proceso recorrerCalle (ES papeles : numero)
+  comenzar
+    juntarPapelesEsquina(papeles)
+    BloquearEsquina(2,PosCa)
+    mover
+    juntarPapelesEsquina(papeles)
+    BloquearEsquina(3,PosCa)
+    mover
+    LiberarEsquina(2,PosCa)
+    juntarPapelesEsquina(papeles)
+    mover
+    LiberarEsquina(3,PosCa)
+    repetir 96
+      juntarPapelesEsquina(papeles)
+      mover
+    juntarPapelesEsquina(papeles)
+  fin
+areas
+  areaPC : AreaPC(2,98,3,99)
+  areaR1a : AreaP(2,1,2,97)
+  areaR1b : AreaP(2,100,2,100)
+  areaR2a : AreaP(3,1,3,97)
+  areaR2b : AreaP(3,100,3,100)
+  areaA1a : AreaP(1,98,1,98)
+  areaA1b : AreaP(4,98,100,98)
+  areaA2a : AreaP(1,99,1,99)
+  areaA2b : AreaP(4,99,100,99)
+  areaF : AreaP(100,100,100,100)
+robots
+  robot tipoR
+  variables
+    flores, rob : numero
+  comenzar
+    flores := 0
+    RecibirMensaje(rob,robotF)
+    recorrerAvenida(flores)
+    EnviarMensaje(rob,robotF)
+    EnviarMensaje(flores,robotF)
+  fin
+  robot tipoA
+  variables
+    papeles, rob : numero
+  comenzar
+    papeles := 0
+    derecha
+    RecibirMensaje(rob,robotF)
+    recorrerCalle(papeles)
+    EnviarMensaje(rob,robotF)
+    EnviarMensaje(papeles,robotF)
+  fin
+  robot fiscalizador
+  variables
+    flores, papeles, rob, elem : numero
+  comenzar
+    EnviarMensaje(1,robotR1)
+    EnviarMensaje(2,robotR2)
+    EnviarMensaje(3,robotA1)
+    EnviarMensaje(4,robotA2)
+    flores := 0
+    papeles := 0
+    repetir 4
+      RecibirMensaje(rob,*)
+      si (rob = 1)
+        RecibirMensaje(elem,robotR1)
+        flores := flores + elem
+      sino
+        si (rob = 2)
+          RecibirMensaje(elem,robotR2)
+          flores := flores + elem
+        sino
+          si (rob = 3)
+            RecibirMensaje(elem,robotA1)
+            papeles := papeles + elem
+          sino
+            RecibirMensaje(elem,robotA2)
+            papeles := papeles + elem
+    si (flores > papeles)
+      Informar ('EquipoGanador',1)
+    sino
+      Informar ('EquipoGanador',2)
+  fin
+variables
+  robotR1, robotR2 : tipoR
+  robotA1, robotA2 : tipoA
+  robotF : fiscalizador
+comenzar
+  AsignarArea(robotR1,areaR1a)
+  AsignarArea(robotR1,areaR1b)
+  AsignarArea(robotR1,areaPC)
+  AsignarArea(robotR2,areaR2a)
+  AsignarArea(robotR2,areaR2b)
+  AsignarArea(robotR2,areaPC)
+  AsignarArea(robotA1,areaA1a)
+  AsignarArea(robotA1,areaA1b)
+  AsignarArea(robotA1,areaPC)
+  AsignarArea(robotA2,areaA2a)
+  AsignarArea(robotA2,areaA2b)
+  AsignarArea(robotA2,areaPC)
+  AsignarArea(robotF,areaF)
+  Iniciar(robotR1,2,1)
+  Iniciar(robotR2,3,1)
+  Iniciar(robotA1,1,98)
+  Iniciar(robotA2,1,99)
+  Iniciar(robotF,100,100)
+fin

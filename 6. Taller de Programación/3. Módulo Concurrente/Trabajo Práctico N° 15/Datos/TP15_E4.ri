@@ -1,0 +1,95 @@
+programa TP15_E4
+procesos
+  proceso juntarFloresEsquina (ES flores : numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+  fin
+areas
+  areaC : AreaC(10,10,10,10)
+  areaPC : AreaPC(40,40,60,60)
+  area1 : AreaP(1,1,1,1)
+  area2 : AreaP(2,1,2,1)
+  area3 : AreaP(3,1,3,1)
+  areaF : AreaP(4,1,4,1)
+robots
+  robot florero
+  variables
+    ok: boolean
+    avIni, caIni, av, ca, flores : numero
+  comenzar
+    avIni := PosAv
+    caIni := PosCa
+    flores:= 0
+    RecibirMensaje(ok,robotF)
+    mientras (ok)
+      RecibirMensaje(av,robotF)
+      RecibirMensaje(ca,robotF)
+      BloquearEsquina(av,ca)
+      Pos (av,ca)
+      juntarFloresEsquina(flores)
+      Pos (avIni,caIni)
+      LiberarEsquina(av,ca)
+      RecibirMensaje(ok,robotF)
+    BloquearEsquina(10,10)
+    Pos (10,10)
+    mientras (HayFlorEnLaBolsa)
+      depositarFlor
+    Pos (avIni,caIni)
+    LiberarEsquina(10,10)
+    EnviarMensaje(flores,robotF)
+  fin
+  robot fiscalizador
+  variables
+    ok: boolean
+    av, ca, flores, floresTotal, rob: numero
+  comenzar
+    ok := V
+    flores := 0
+    repetir 8
+      Random(rob,1,3)
+      Random(av,40,60)
+      Random(ca,40,60)
+      si (rob = 1)
+        EnviarMensaje(ok,robot1)
+        EnviarMensaje(av,robot1)
+        EnviarMensaje(ca,robot1)
+      sino
+        si (rob = 2)
+          EnviarMensaje(ok,robot2)
+          EnviarMensaje(av,robot2)
+          EnviarMensaje(ca,robot2)
+        sino
+          EnviarMensaje(ok,robot3)
+          EnviarMensaje(av,robot3)
+          EnviarMensaje(ca,robot3)
+    ok := F
+    EnviarMensaje(ok,robot1)
+    EnviarMensaje(ok,robot2)
+    EnviarMensaje(ok,robot3)
+    repetir 3
+      RecibirMensaje(flores,*)
+      floresTotal := floresTotal + flores
+    Informar ('FloresJuntadas',floresTotal)
+  fin
+variables
+  robot1, robot2, robot3: florero
+  robotF : fiscalizador
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot1,areaC)
+  AsignarArea(robot1,areaPC)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot2,areaC)
+  AsignarArea(robot2,areaPC)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot3,areaC)
+  AsignarArea(robot3,areaPC)
+  AsignarArea(robotF,areaF)
+  AsignarArea(robotF,areaC)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,2,1)
+  Iniciar(robot3,3,1)
+  Iniciar(robotF,4,1)
+fin

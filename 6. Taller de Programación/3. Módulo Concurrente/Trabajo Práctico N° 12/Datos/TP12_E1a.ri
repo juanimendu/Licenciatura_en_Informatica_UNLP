@@ -1,0 +1,50 @@
+programa TP12_E1a
+procesos
+  proceso juntarFlores (ES flores : numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+  fin
+  proceso recorrerAvenida (ES flores : numero)
+  comenzar
+    repetir 9
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+  fin
+areas
+  area1 : AreaP(1,1,1,10)
+  area2 : AreaP(2,11,2,20)
+robots
+  robot tipo1
+  variables
+    flores1, flores2 : numero
+  comenzar
+    flores1 := 0
+    recorrerAvenida(flores1)
+    EnviarMensaje(flores1,robot2)
+    RecibirMensaje(flores2,robot2)
+    si (flores1 > flores2)
+      Informar ('Diferencia', flores1-flores2)
+  fin
+  robot tipo2
+  variables
+    flores1, flores2 : numero
+  comenzar
+    flores2 := 0
+    recorrerAvenida(flores2)
+    EnviarMensaje(flores2,robot1)
+    RecibirMensaje(flores1,robot1)
+    si (flores2 > flores1)
+      Informar ('DiferenciaRobotGanador', flores2-flores1)
+  fin
+variables
+  robot1 : tipo1
+  robot2 : tipo2
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,area2)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,2,11)
+fin

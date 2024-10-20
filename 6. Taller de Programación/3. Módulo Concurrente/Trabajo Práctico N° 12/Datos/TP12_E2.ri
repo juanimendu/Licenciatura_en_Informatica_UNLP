@@ -1,0 +1,78 @@
+programa TP12_E2
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso juntarFloresEsquina (ES flores : numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+  fin
+  proceso juntarPapelesEsquina (ES papeles : numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles := papeles + 1
+  fin
+  proceso esquina (ES flores : numero ; ES papeles : numero)
+  comenzar
+    si (HayFlorEnLaEsquina)
+      juntarFloresEsquina(flores)
+    si (HayPapelEnLaEsquina) 
+      juntarPapelesEsquina(papeles)
+  fin
+  proceso escalon (E alto : numero ; ES escalones : numero)
+  variables
+    flores, papeles : numero
+  comenzar
+    flores := 0
+    papeles := 0
+    repetir alto
+      esquina(flores,papeles)
+      mover
+    esquina(flores,papeles)
+    derecha
+    mover
+    izquierda
+    si (flores > papeles)
+      escalones := escalones + 1
+  fin
+areas
+  ciudad : AreaC(1,1,100,100)
+robots
+  robot tipo1
+  variables
+    alto, escalones : numero
+  comenzar
+    escalones := 0
+    repetir 4
+      Random(alto,1,5)
+      escalon(alto,escalones)
+    EnviarMensaje(escalones,robotJ)
+  fin
+  robot jefe
+  variables
+    suma, escalones : numero
+  comenzar
+    suma := 0
+    repetir 3
+      RecibirMensaje(escalones,*)
+      suma := suma + escalones
+    Informar ('Suma',suma)
+  fin
+variables
+  robot1, robot2, robot3 : tipo1
+  robotJ : jefe
+comenzar
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot2,ciudad)
+  AsignarArea(robot3,ciudad)
+  AsignarArea(robotJ,ciudad)
+  Iniciar(robot1,2,1)
+  Iniciar(robot2,7,1)
+  Iniciar(robot3,12,1)
+  Iniciar(robotJ,1,1)
+fin

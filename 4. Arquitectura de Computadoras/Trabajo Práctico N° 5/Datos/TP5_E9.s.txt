@@ -1,0 +1,27 @@
+			.data
+VOCALES:		.asciiz "AEIOUaeiou"
+CHAR:			.ascii "a"
+RES:			.word 0
+
+			.code
+			daddi $sp, $0, 0x400
+			lbu $a0, CHAR($0)
+			daddi $a1, $0, VOCALES
+			jal ES_VOCAL
+			sd $v0, RES($0)
+			halt
+
+ES_VOCAL:		daddi $sp, $sp, -16
+			sd $ra, 0($sp)
+			sd $s1, 8($sp)
+			dadd $v0, $0, $0
+			dadd $s1, $a1, $0
+LAZO:			lbu $t1, 0($s1)
+			beqz $t1, FIN
+			beq $a0, $t1, VOCAL
+			daddi $s1, $s1, 1
+			j LAZO
+VOCAL:			daddi $v0, $v0, 1
+FIN:			ld $ra, 0($sp)
+			ld $s1, 8($sp)
+			jr $ra

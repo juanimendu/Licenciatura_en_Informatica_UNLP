@@ -1,0 +1,33 @@
+			.data
+ESTATURA:		.double 1.65
+PESO:			.double 83.0
+INFRAPESO:		.double 18.5
+NORMAL:			.double 25.0
+SOBREPESO:		.double 30.0
+IMC:			.double 0.0
+ESTADO:			.word 0
+
+			.code
+			l.d f1, ESTATURA(r0)
+			mul.d f6, f1, f1
+			l.d f2, PESO(r0)
+			l.d f3, INFRAPESO(r0)
+			l.d f4, NORMAL(r0)
+			l.d f5, SOBREPESO(r0)
+			div.d f7, f2, f6
+			c.lt.d f7, f3
+			bc1t INFRA
+			c.lt.d f7, f4
+			bc1t NORM
+			c.lt.d f7, f5
+			bc1t SOBRE
+			daddi r1, r0, 4
+			j FIN
+INFRA:			daddi r1, r0, 1
+			j FIN
+NORM:			daddi r1, r0, 2
+			j FIN
+SOBRE:			daddi r1, r0, 3
+FIN:			s.d f7, IMC(r0)
+			sd r1, ESTADO(r0)
+			halt

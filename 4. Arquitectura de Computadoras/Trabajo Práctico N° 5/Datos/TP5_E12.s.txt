@@ -1,0 +1,25 @@
+			.data
+VALOR:			.word 10
+RESULT:			.word 0
+
+			.code
+			daddi $sp, $0, 0x400
+			ld $a0, VALOR($0)
+			jal FACTORIAL
+			sd $v0, RESULT($0)
+			halt
+
+FACTORIAL:		daddi $sp, $sp, -16
+			sd $ra, 0($sp)
+			sd $s0, 8($sp)
+			beqz $a0, FIN1
+dadd $s0, $a0, $0
+			daddi $a0, $a0, -1
+			jal FACTORIAL
+			dmul $v0, $v0, $s0
+			j FIN2
+FIN1:			daddi $v0, $0, 1
+FIN2:			ld $ra, 0($sp)
+			ld $s0, 8($sp)
+			daddi $sp, $sp, 16
+			jr $ra

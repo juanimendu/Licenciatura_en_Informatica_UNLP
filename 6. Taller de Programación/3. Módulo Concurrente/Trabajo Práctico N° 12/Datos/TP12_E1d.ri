@@ -1,0 +1,93 @@
+programa TP12_E1d
+procesos
+  proceso juntarFlores (ES flores : numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+  fin
+  proceso recorrerAvenida (ES flores : numero)
+  comenzar
+    repetir 9
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+  fin
+  proceso actualizarMax (E flores : numero ; ES floresMax : numero ; E rob : numero ; ES robMax : numero)
+  comenzar
+    si (flores > floresMax)
+      floresMax := flores
+      robMax := rob
+  fin
+areas
+  area1 : AreaP(1,1,1,10)
+  area2 : AreaP(2,11,2,20)
+  area3 : AreaP(3,21,3,30)
+  area4 : AreaP(4,31,4,40)
+  area5 : AreaP(5,41,5,50)
+  area6 : AreaP(6,51,6,60)
+  area7 : AreaP(2,1,2,1)
+robots
+  robot tipo1
+  variables
+    flores, rob : numero
+  comenzar
+    flores := 0
+    rob := 0
+    RecibirMensaje(rob,robot7)
+    recorrerAvenida(flores)
+    EnviarMensaje(rob,robot7)
+    EnviarMensaje(flores,robot7)
+  fin
+  robot tipo2
+  variables
+    flores, floresMax, rob, robMax : numero
+  comenzar
+    floresMax := 0
+    robMax := 0
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    EnviarMensaje(4,robot4)
+    EnviarMensaje(5,robot5)
+    EnviarMensaje(6,robot6)
+    repetir 6
+      RecibirMensaje(rob,*)
+      si (rob = 1)
+        RecibirMensaje(flores,robot1)
+      sino
+        si (rob = 2)
+          RecibirMensaje(flores,robot2)
+        sino
+          si (rob = 3)
+            RecibirMensaje(flores,robot3)
+          sino
+            si (rob = 4)
+              RecibirMensaje(flores,robot4)
+            sino
+              si (rob = 5)
+                RecibirMensaje(flores,robot5)
+              sino
+                RecibirMensaje(flores,robot6)
+      actualizarMax(flores,floresMax,rob,robMax)
+    Informar ('RobotGanador_Flores',robMax,floresMax)
+  fin
+variables
+  robot1, robot2, robot3, robot4, robot5, robot6 : tipo1
+  robot7 : tipo2
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot4,area4)
+  AsignarArea(robot5,area5)
+  AsignarArea(robot6,area6)
+  AsignarArea(robot7,area7)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,2,11)
+  Iniciar(robot3,3,21)
+  Iniciar(robot4,4,31)
+  Iniciar(robot5,5,41)
+  Iniciar(robot6,6,51)
+  Iniciar(robot7,2,1)
+fin

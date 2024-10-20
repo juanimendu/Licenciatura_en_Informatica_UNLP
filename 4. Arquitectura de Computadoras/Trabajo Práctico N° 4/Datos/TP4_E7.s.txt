@@ -1,0 +1,24 @@
+		.data
+TABLA:		.word 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+RES:		.word 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+X:		.word 5
+TAM:		.word 10
+CANT:		.word 0
+
+		.code
+		ld r1, TAM(r0)
+		ld r2, X(r0)
+		dadd r3, r0, r0
+		dadd r4, r0, r0
+		daddi r5, r0, 1
+		daddi r2, r2, 1
+LAZO:		ld r6, TABLA(r3)
+		slt r7, r6, r2
+		bnez r7, MENOR
+		sd r5, RES(r3)
+		daddi r4, r4, 1
+MENOR:		daddi r1, r1, -1
+		daddi r3, r3, 8
+		bnez r1, LAZO
+		sd r4, CANT(r0)
+		halt

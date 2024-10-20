@@ -1,0 +1,19 @@
+		.data
+CONTROL:	.word 0x10000
+DATA:		.word 0x10008
+COORX:		.byte 24
+COORY:		.byte 24
+COLOR:		.byte 255, 0, 255, 0
+
+		.code
+		ld $s0, CONTROL($0)
+		ld $s1, DATA($0)
+		lbu $t0, COORX($0)
+		sb $t0, 5($s1)
+		lbu $t1, COORY($0)
+		sb $t1, 4($s1)
+		lwu $t2, COLOR($0)
+		sw $t2, 0($s1)
+		daddi $t3, $0, 5
+		sd $t3, 0($s0)
+		halt

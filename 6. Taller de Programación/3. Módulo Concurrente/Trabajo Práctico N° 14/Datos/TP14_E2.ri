@@ -1,0 +1,72 @@
+programa TP14_E2
+areas
+  areaC : AreaC(50,50,50,50)
+  areaP1 : AreaP(5,1,5,100)
+  areaP2 : AreaP(10,1,10,100)
+  areaC1 : AreaP(11,1,11,1)
+  areaC2 : AreaP(12,1,12,1)
+robots
+  robot productor
+  variables
+    av, ca, papeles : numero
+  comenzar
+    repetir 99
+      av := PosAv
+      ca := PosCa
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+        papeles := papeles + 1 
+        si (papeles = 5)
+          papeles := 0
+          BloquearEsquina(50,50)
+          Pos (50,50)
+          repetir papeles
+            depositarPapel
+          Pos (av,ca)
+          LiberarEsquina(50,50)
+      mover
+  fin
+  robot consumidor
+  variables
+    ok : boolean
+    avIni, caIni, papeles, papelesReq, int : numero
+  comenzar
+    avIni := PosAv
+    caIni := PosCa
+    int := 0
+    mientras (int < 8)
+      papeles := 0
+      Random(papelesReq,2,5)
+      BloquearEsquina(50,50)
+      Pos (50,50)
+      mientras (HayPapelEnLaEsquina & (papeles < papelesReq))
+          tomarPapel
+          papeles := papeles + 1
+      si (papeles < papelesReq)
+        repetir papeles
+          depositarPapel
+        Pos (avIni,caIni)
+        LiberarEsquina(50,50)
+        int := int + 1
+      sino
+        Pos (avIni,caIni)
+        LiberarEsquina(50,50)
+        int := 0
+  fin
+variables
+  robotP1, robotP2 : productor
+  robotC1, robotC2 : consumidor
+comenzar
+  AsignarArea(robotP1,areaC)
+  AsignarArea(robotP1,areaP1)
+  AsignarArea(robotP2,areaC)
+  AsignarArea(robotP2,areaP2)
+  AsignarArea(robotC1,areaC)
+  AsignarArea(robotC1,areaC1)
+  AsignarArea(robotC2,areaC)
+  AsignarArea(robotC2,areaC2)
+  Iniciar(robotP1,5,1)
+  Iniciar(robotP2,10,1)
+  Iniciar(robotC1,11,1)
+  Iniciar(robotC2,12,1)
+fin

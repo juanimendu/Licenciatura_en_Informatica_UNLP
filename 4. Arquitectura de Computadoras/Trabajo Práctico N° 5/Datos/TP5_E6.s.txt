@@ -1,0 +1,18 @@
+			.data
+VALOR1:			.word 16
+VALOR2:			.word 4
+RESULT:			.word 0
+
+			.text
+			ld $a0, VALOR1($zero)
+			ld $a1, VALOR2($zero)
+			jal A_LA_POTENCIA
+			sd $v0, RESULT($zero)
+			halt
+A_LA_POTENCIA:		daddi $v0, $zero, 1
+LAZO:			slt $t1, $a1, $zero
+			bnez $t1, TERMINAR
+			daddi $a1, $a1, -1
+			dmul $v0, $v0, $a0
+			j LAZO
+TERMINAR:		jr $ra

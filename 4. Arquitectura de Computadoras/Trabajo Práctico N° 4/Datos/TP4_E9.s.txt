@@ -1,0 +1,15 @@
+		.data
+A:		.word 5
+X:		.word 0
+Y:		.word 5
+
+		.code
+		ld r1, A(r0)
+		ld r2, X(r0)
+		ld r3, Y(r0)
+LAZO:		beqz r1, FIN
+		daddi r1, r1, -1
+		dadd r2, r2, r3
+		j LAZO
+FIN:		sd r2, X(r0)
+		halt

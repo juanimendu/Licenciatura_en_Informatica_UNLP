@@ -1,0 +1,53 @@
+			.data 
+CONTROL:		.word 0x10000
+DATA:			.word 0x10008
+MSJ:			.asciiz "INTRODUCIR UN NUMERO ENTERO DE UN DIGITO:\n"
+ERROR:			.asciiz "ERROR"
+MENOSNUEVE:		.asciiz "MNUEVE"
+MENOSOCHO:		.asciiz "MOCHO"
+MENOSSIETE:		.asciiz "MSIETE"
+MENOSSEIS:		.asciiz "MSEIS"
+MENOSCINCO:		.asciiz "MCINCO"
+MENOSCUATRO:		.asciiz "MCUATRO"
+MENOSTRES:		.asciiz "MTRES"
+MENOSDOS:		.asciiz "MDOS"
+MENOSUNO:		.asciiz "MUNO"
+CERO:			.asciiz "CERO"
+UNO:			.asciiz "UNO"
+DOS:			.asciiz "DOS"
+TRES:			.asciiz "TRES"
+CUATRO:			.asciiz "CUATRO"
+CINCO:			.asciiz "CINCO"
+SEIS:			.asciiz "SEIS"
+SIETE:			.asciiz "SIETE"
+OCHO:			.asciiz "OCHO"
+NUEVE:			.asciiz "NUEVE"
+
+			.code
+			ld $s0, CONTROL($0)
+			ld $s1, DATA($0)
+			daddi $t1, $0, MSJ
+			sd $t1, 0($s1)
+			daddi $t0, $0, 4
+			sd $t0, 0($s0)
+			jal INGRESO
+			dadd $a0, $v0, $0
+			jal MUESTRA
+			halt
+
+INGRESO:		daddi $v0, $0, -10
+			daddi $t0, $0, 8
+			sd $t0, 0($s0)
+			ld $t1, 0($s1)
+			slti $t2, $t1, 10
+			beqz $t2, FIN
+			dadd $v0, $t1, $0
+FIN:			jr $ra
+
+MUESTRA:		daddi $t3, $0, 8
+			dmul $t4, $a0, $t3
+			daddi $t5, $t4, CERO
+			sd $t5, 0($s1)
+			daddi $t6, $0, 4
+			sd $t6, 0($s0)
+			jr $ra

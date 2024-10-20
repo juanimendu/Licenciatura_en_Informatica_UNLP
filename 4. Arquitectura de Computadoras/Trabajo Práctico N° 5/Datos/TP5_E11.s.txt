@@ -1,0 +1,32 @@
+			.data
+TABLA:			.word 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0
+RES:			.word 0
+
+			.code
+			daddi $sp, $0, 0x400
+			daddi $a0, $0, TABLA
+			jal CANT_IMP
+			sd $v1, RES($0)
+			halt
+
+CANT_IMP:		daddi $sp, $sp, -16
+			sd $ra, 0($sp)
+			sd $s0, 8($sp)
+			dadd $v1, $0, $0
+			dadd $s0, $a0, $0
+LAZO:			ld $a0, 0($s0)
+			beqz $a0, FIN1
+			jal ES_IMPAR
+			dadd $v1, $v1, $v0
+			daddi $s0, $s0, 8
+			j LAZO
+FIN1:			ld $ra, 0($sp)
+			ld $s0, 8($sp)
+			daddi $sp, $sp, 16
+			jr $ra
+
+ES_IMPAR:		dadd $v0, $0, $0
+			andi $t0, $a0, 1
+			beqz $t0, FIN2
+			daddi $v0, $v0, 1
+FIN2:			jr $ra

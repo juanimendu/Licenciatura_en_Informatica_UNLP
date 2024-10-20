@@ -1,0 +1,111 @@
+programa TP15_E2
+procesos
+  proceso vaciarEsquina (ES flores : numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso juntarFloresEsquina (ES flores : numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+  fin
+  proceso recorrerCalle (E cant : numero)
+  variables
+    av, ca, flores : numero
+  comenzar
+    flores := 0
+    repetir cant
+      vaciarEsquina(flores)
+      mover
+    av := PosAv
+    ca := PosCa
+    si (cant = 9)
+      vaciarEsquina(flores)
+    BloquearEsquina(50,50)
+    Pos (50,50)
+    repetir flores
+      depositarFlor
+    Pos (av,ca)
+    LiberarEsquina(50,50)
+  fin
+areas
+  areaC : AreaC(50,50,50,50)
+  area1 : AreaP(1,1,100,1)
+  area2 : AreaP(1,2,100,2)
+  area3 : AreaP(1,3,100,3)
+  areaF : AreaP(1,4,1,4)
+robots
+  robot tipo1
+  variables
+    ok : boolean
+    rob : numero
+  comenzar
+    ok := V
+    derecha
+    RecibirMensaje(rob,robotF)
+    repetir 9
+      recorrerCalle(10)
+      si (rob = 1)
+        EnviarMensaje(ok,robot2)
+        EnviarMensaje(ok,robot3)
+      sino
+        si (rob = 2)
+          EnviarMensaje(ok,robot1)
+          EnviarMensaje(ok,robot3)
+        sino
+          EnviarMensaje(ok,robot1)
+          EnviarMensaje(ok,robot2)
+      RecibirMensaje(ok,*)
+      RecibirMensaje(ok,*)
+    recorrerCalle(9)
+    si (rob = 1)
+      EnviarMensaje(ok,robot2)
+      EnviarMensaje(ok,robot3)
+    sino
+      si (rob = 2)
+        EnviarMensaje(ok,robot1)
+        EnviarMensaje(ok,robot3)
+      sino
+        EnviarMensaje(ok,robot1)
+        EnviarMensaje(ok,robot2)
+    RecibirMensaje(ok,*)
+    RecibirMensaje(ok,*)
+    EnviarMensaje(ok,robotF)
+  fin
+  robot fiscalizador
+  variables
+    ok : boolean
+    av, ca, flores : numero
+  comenzar
+    flores := 0
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    repetir 3
+      RecibirMensaje(ok,*)
+    Pos (50,50)
+    juntarFloresEsquina(flores)
+    Informar ('FloresTotales',flores)
+  fin
+variables
+  robot1, robot2, robot3 : tipo1
+  robotF : fiscalizador
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot1,areaC)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot2,areaC)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot3,areaC)
+  AsignarArea(robotF,areaF)
+  AsignarArea(robotF,areaC)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,1,2)
+  Iniciar(robot3,1,3)
+  Iniciar(robotF,1,4)
+fin

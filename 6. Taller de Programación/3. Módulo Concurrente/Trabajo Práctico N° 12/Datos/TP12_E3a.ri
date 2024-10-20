@@ -1,0 +1,89 @@
+programa TP12_E3a
+procesos
+  proceso juntarFloresEsquina (ES flores : numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+  fin
+  proceso juntarPapelesEsquina (ES papeles : numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles := papeles + 1
+  fin
+  proceso juntarFlores (ES flores : numero)
+  comenzar
+    repetir 9
+      si (HayFlorEnLaEsquina)
+        juntarFloresEsquina(flores)
+      mover
+    si (HayFlorEnLaEsquina)
+      juntarFloresEsquina(flores)
+  fin
+  proceso juntarPapeles (ES papeles : numero)
+  comenzar
+    repetir 9
+      si (HayPapelEnLaEsquina)
+        juntarPapelesEsquina(papeles)
+      mover
+    si (HayPapelEnLaEsquina)
+      juntarPapelesEsquina(papeles)
+  fin
+areas
+  areaA1 : AreaP(1,1,10,1)
+  areaA2 : AreaP(11,1,20,1)
+  areaB1 : AreaP(1,5,10,5)
+  areaB2 : AreaP(11,5,20,5)
+robots
+  robot tipoA1
+  variables
+    papeles : numero
+  comenzar
+    papeles := 0
+    derecha
+    juntarPapeles(papeles)
+    EnviarMensaje(papeles,robotA2)
+  fin
+  robot tipoA2
+  variables
+    papeles : numero
+  comenzar
+    RecibirMensaje(papeles,robotA1)
+    derecha
+    juntarPapeles(papeles)
+    Informar ('TotalPapelesEquipoA',papeles)
+  fin
+  robot tipoB1
+  variables
+    flores : numero
+  comenzar
+    flores := 0
+    derecha
+    juntarFlores(flores)
+    EnviarMensaje(flores,robotB2)
+  fin
+  robot tipoB2
+  variables
+    flores : numero
+  comenzar
+    RecibirMensaje(flores,robotB1)
+    derecha
+    juntarFlores(flores)
+    Informar ('TotalFloresEquipoB',flores)
+  fin
+variables
+  robotA1 : tipoA1
+  robotA2 : tipoA2
+  robotB1 : tipoB1
+  robotB2 : tipoB2
+comenzar
+  AsignarArea(robotA1,areaA1)
+  AsignarArea(robotA2,areaA2)
+  AsignarArea(robotB1,areaB1)
+  AsignarArea(robotB2,areaB2)
+  Iniciar(robotA1,1,1)
+  Iniciar(robotA2,11,1)
+  Iniciar(robotB1,1,5)
+  Iniciar(robotB2,11,5)
+fin

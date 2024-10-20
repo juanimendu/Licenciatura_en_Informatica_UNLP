@@ -1,0 +1,72 @@
+programa TP14_E3a
+procesos
+  proceso juntarPapelesEsquina
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+areas
+  area1 : AreaP(1,1,1,100)
+  area2 : AreaP(2,1,2,100)
+  area3 : AreaP(3,1,3,100)
+  areaC : AreaP(5,5,5,5)
+robots
+  robot tipo1
+  variables
+    ok : boolean
+    rob : numero
+  comenzar
+    ok := V
+    RecibirMensaje(rob,robotC)
+    mientras (PosCa < 96)
+      repetir 5
+        juntarPapelesEsquina
+        mover
+      si (rob = 1)
+        EnviarMensaje(ok,robot2)
+        EnviarMensaje(ok,robot3)
+      sino
+        si (rob = 2)
+          EnviarMensaje(ok,robot1)
+          EnviarMensaje(ok,robot3)
+        sino
+          EnviarMensaje(ok,robot1)
+          EnviarMensaje(ok,robot2)
+      RecibirMensaje(ok,*)
+      RecibirMensaje(ok,*)
+    repetir 4
+      juntarPapelesEsquina
+      mover
+    juntarPapelesEsquina
+    si (rob = 1)
+      EnviarMensaje(ok,robot2)
+      EnviarMensaje(ok,robot3)
+    sino
+      si (rob = 2)
+        EnviarMensaje(ok,robot1)
+        EnviarMensaje(ok,robot3)
+      sino
+        EnviarMensaje(ok,robot1)
+        EnviarMensaje(ok,robot2)
+    RecibirMensaje(ok,*)
+    RecibirMensaje(ok,*)
+  fin
+  robot coordinador
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+  fin
+variables
+  robot1, robot2, robot3 : tipo1
+  robotC : coordinador
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot3,area3)
+  AsignarArea(robotC,areaC)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,2,1)
+  Iniciar(robot3,3,1)
+  Iniciar(robotC,5,5)
+fin
