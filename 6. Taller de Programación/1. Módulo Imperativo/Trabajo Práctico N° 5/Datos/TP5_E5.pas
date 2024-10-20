@@ -11,13 +11,13 @@ const
 type
   t_anio=anio_ini..anio_fin;
   t_registro_reclamo1=record
-    codigo: int8;
+    codigo: int16;
     dni: int32;
     anio: t_anio;
     tipo: string;
   end;
   t_registro_reclamo2=record
-    codigo: int8;
+    codigo: int16;
     anio: t_anio;
     tipo: string;
   end;
@@ -47,14 +47,22 @@ begin
     string_aux:=string_aux+chr(ord('A')+random(26));
   random_string:=string_aux;
 end;
-procedure leer_reclamo(var registro_reclamo1: t_registro_reclamo1);
+procedure leer_reclamo(var registro_reclamo1: t_registro_reclamo1; dni: int32);
+var
+  i: int8;
 begin
-  registro_reclamo1.codigo:=0;
-  while (registro_reclamo1.codigo=0) do
-    registro_reclamo1.codigo:=codigo_salida+random(high(int8));
+  i:=random(100);
+  if (i=0) then
+    registro_reclamo1.codigo:=codigo_salida
+  else
+    registro_reclamo1.codigo:=1+random(high(int16));
   if (registro_reclamo1.codigo<>codigo_salida) then
   begin
-    registro_reclamo1.dni:=1+random(high(int32));
+    i:=random(2);
+    if (i=0) then
+      registro_reclamo1.dni:=dni
+    else
+      registro_reclamo1.dni:=10000000+random(40000001);
     registro_reclamo1.anio:=anio_ini+random(anio_fin-anio_ini+1);
     registro_reclamo1.tipo:=random_string(5+random(6));
   end;
@@ -94,7 +102,7 @@ var
   registro_reclamo1: t_registro_reclamo1;
   registro_dni: t_registro_dni;
 begin
-  leer_reclamo(registro_reclamo1);
+  leer_reclamo(registro_reclamo1,10000000+random(40000001));
   while (registro_reclamo1.codigo<>codigo_salida) do
   begin
     registro_dni.dni:=registro_reclamo1.dni;
@@ -104,7 +112,7 @@ begin
     begin
       agregar_adelante_lista_reclamos(registro_dni.reclamos,registro_reclamo1);
       registro_dni.cantidad:=registro_dni.cantidad+1;
-      leer_reclamo(registro_reclamo1);
+      leer_reclamo(registro_reclamo1,registro_dni.dni);
     end;
     agregar_abb_dnis(abb_dnis,registro_dni);
   end;

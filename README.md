@@ -1,12 +1,11 @@
-# Licenciatura_en_Informatica_UNLP
-
-# Licenciatura en Informática - Trabajos Prácticos
+# Licenciatura en Informática (UNLP) - Trabajos Prácticos
 
 Bienvenido al repositorio de los trabajos prácticos de las materias de la Licenciatura en Informática de la Universidad Nacional de La Plata (UNLP).
 
 ## Descripción
 
-Este repositorio contiene los trabajos prácticos realizados durante la carrera, organizados por materia. Se incluyen los códigos y las resoluciones en .docx y .pdf.
+Este repositorio contiene las resoluciones de los trabajos prácticos realizados durante la carrera (iniciada en el año 2023), organizados por materia.
+Para cada resolución, se incluyen los códigos (en el lenguaje utilizado) y el informe en formato .docx y .pdf.
 
 ## Estructura del Repositorio (hasta el momento)
 
@@ -19,6 +18,12 @@ Este repositorio contiene los trabajos prácticos realizados durante la carrera,
 - `6. Taller de Programación`: Contiene los trabajos prácticos de la materia "Taller de Programación".
 - `17. Matemática 3`: Contiene los trabajos prácticos de la materia "Matemática 3".
 - `29. Matemática 4`: Contiene los trabajos prácticos de la materia "Matemática 4".
+
+## Cómo Contribuir
+
+1. Haz un fork del repositorio.
+2. Dale Star al repositorio.
+3. Seguime en GitHub.
 
 ## Contacto
 

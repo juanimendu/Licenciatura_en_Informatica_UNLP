@@ -16,13 +16,13 @@ const
 type
   t_anio=anio_ini..anio_fin;
   t_registro_reclamo1=record
-    codigo: int8;
-    dni: int32;
+    codigo: int16;
+    dni: int8;
     anio: t_anio;
     tipo: string;
   end;
   t_registro_reclamo2=record
-    codigo: int8;
+    codigo: int16;
     anio: t_anio;
     tipo: string;
   end;
@@ -32,7 +32,7 @@ type
     sig: t_lista_reclamos;
   end;
   t_registro_dni=record
-    dni: int32;
+    dni: int8;
     reclamos: t_lista_reclamos;
     cantidad: int16;
   end;
@@ -58,13 +58,17 @@ begin
   random_string:=string_aux;
 end;
 procedure leer_reclamo(var registro_reclamo1: t_registro_reclamo1);
+var
+  i: int8;
 begin
-  registro_reclamo1.codigo:=0;
-  while (registro_reclamo1.codigo=0) do
-    registro_reclamo1.codigo:=codigo_salida+random(high(int8));
+  i:=random(100);
+  if (i=0) then
+    registro_reclamo1.codigo:=codigo_salida
+  else
+    registro_reclamo1.codigo:=1+random(high(int16));
   if (registro_reclamo1.codigo<>codigo_salida) then
   begin
-    registro_reclamo1.dni:=1+random(high(int32));
+    registro_reclamo1.dni:=1+random(high(int8));
     registro_reclamo1.anio:=anio_ini+random(anio_fin-anio_ini+1);
     registro_reclamo1.tipo:=random_string(5+random(6));
   end;
@@ -122,13 +126,13 @@ begin
     leer_reclamo(registro_reclamo1);
   end;
 end;
-procedure imprimir_registro_reclamo2(registro_reclamo2: t_registro_reclamo2; dni: int32; reclamo: int16);
+procedure imprimir_registro_reclamo2(registro_reclamo2: t_registro_reclamo2; dni: int8; reclamo: int16);
 begin
   textcolor(green); write('El código de reclamo del reclamo '); textcolor(yellow); write(reclamo); textcolor(green); write(' del DNI '); textcolor(yellow); write(dni); textcolor(green); write(' es '); textcolor(red); writeln(registro_reclamo2.codigo);
   textcolor(green); write('El año del reclamo '); textcolor(yellow); write(reclamo); textcolor(green); write(' del DNI '); textcolor(yellow); write(dni); textcolor(green); write(' es '); textcolor(red); writeln(registro_reclamo2.anio);
   textcolor(green); write('El tipo de reclamo del reclamo '); textcolor(yellow); write(reclamo); textcolor(green); write(' del DNI '); textcolor(yellow); write(dni); textcolor(green); write(' es '); textcolor(red); writeln(registro_reclamo2.tipo);
 end;
-procedure imprimir_lista_reclamos(lista_reclamos: t_lista_reclamos; dni: int32);
+procedure imprimir_lista_reclamos(lista_reclamos: t_lista_reclamos; dni: int8);
 var
   i: int16;
 begin
@@ -156,7 +160,7 @@ begin
     imprimir_abb_dnis(abb_dnis^.hd);
   end;
 end;
-function contar_reclamos1(abb_dnis: t_abb_dnis; dni: int32): int16;
+function contar_reclamos1(abb_dnis: t_abb_dnis; dni: int8): int16;
 begin
   if (abb_dnis=nil) then
     contar_reclamos1:=0
@@ -168,9 +172,9 @@ begin
     else
       contar_reclamos1:=contar_reclamos1(abb_dnis^.hd,dni);
 end;
-procedure verificar_dnis(var dni1, dni2: int32);
+procedure verificar_dnis(var dni1, dni2: int8);
 var
-  aux: int32;
+  aux: int8;
 begin
   if (dni1>dni2) then
   begin
@@ -179,7 +183,7 @@ begin
     dni2:=aux;
   end;
 end;
-function contar_reclamos2(abb_dnis: t_abb_dnis; dni1, dni2: int32): int16;
+function contar_reclamos2(abb_dnis: t_abb_dnis; dni1, dni2: int8): int16;
 begin
   if (abb_dnis=nil) then
     contar_reclamos2:=0
@@ -191,7 +195,7 @@ begin
     else
       contar_reclamos2:=contar_reclamos2(abb_dnis^.hi,dni1,dni2)+contar_reclamos2(abb_dnis^.hd,dni1,dni2)+1;
 end;
-procedure agregar_adelante_lista_codigos(var lista_codigos: t_lista_codigos; codigo: int8);
+procedure agregar_adelante_lista_codigos(var lista_codigos: t_lista_codigos; codigo: int16);
 var
   nuevo: t_lista_codigos;
 begin
@@ -218,7 +222,7 @@ begin
     cargar_lista_codigos(lista_codigos,abb_dnis^.hi,anio);
   end;
 end;
-procedure imprimir_lista_codigos(lista_codigos: t_lista_codigos);
+procedure imprimir_lista_codigos(lista_codigos: t_lista_codigos; anio: t_anio);
 var
   i: int16;
 begin
@@ -226,7 +230,7 @@ begin
   while (lista_codigos<>nil) do
   begin
     i:=i+1;
-    textcolor(green); write('Código de reclamo '); textcolor(yellow); write(i); textcolor(green); write(': '); textcolor(red); writeln(lista_codigos^.ele);
+    textcolor(green); write('Código de reclamo '); textcolor(yellow); write(i); textcolor(green); write(' del año '); textcolor(yellow); write(anio); textcolor(green); write(': '); textcolor(red); writeln(lista_codigos^.ele);
     lista_codigos:=lista_codigos^.sig;
   end;
 end;
@@ -234,7 +238,7 @@ var
   lista_codigos: t_lista_codigos;
   abb_dnis: t_abb_dnis;
   anio: t_anio;
-  dni, dni1, dni2: int32;
+  dni, dni1, dni2: int8;
 begin
   randomize;
   abb_dnis:=nil;
@@ -245,19 +249,16 @@ begin
   begin
     imprimir_abb_dnis(abb_dnis);
     writeln(); textcolor(red); writeln('INCISO (b):'); writeln();
-    textcolor(green); write('Introducir DNI para buscar en el abb la cantidad de reclamos de ese DNI: ');
-    textcolor(yellow); readln(dni);
+    dni:=1+random(high(int8));
     textcolor(green); write('La cantidad de reclamos del DNI '); textcolor(yellow); write(dni); textcolor(green); write(' es '); textcolor(red); writeln(contar_reclamos1(abb_dnis,dni));
     writeln(); textcolor(red); writeln('INCISO (c):'); writeln();
-    textcolor(green); writeln('Introducir dos DNI para buscar en el abb la cantidad de reclamos cuyo DNI se encuentra entre esos dos DNI: ');
-    textcolor(yellow); readln(dni1); readln(dni2);
+    dni1:=1+random(high(int8)); dni2:=1+random(high(int8));
     verificar_dnis(dni1,dni2);
     textcolor(green); write('La cantidad de reclamos en el abb cuyo DNI se encuentra entre '); textcolor(yellow); write(dni1); textcolor(green); write(' y '); textcolor(yellow); write(dni2); textcolor(green); write(' es '); textcolor(red); writeln(contar_reclamos2(abb_dnis,dni1,dni2));
     writeln(); textcolor(red); writeln('INCISO (d):'); writeln();
-    textcolor(green); write('Introducir año para buscar en el abb los códigos de reclamo de ese año: ');
-    textcolor(yellow); readln(anio);
+    anio:=anio_ini+random(anio_fin-anio_ini+1);
     cargar_lista_codigos(lista_codigos,abb_dnis,anio);
     if (lista_codigos<>nil) then
-      imprimir_lista_codigos(lista_codigos);
+      imprimir_lista_codigos(lista_codigos,anio);
   end;
 end.
