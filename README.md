@@ -1,6 +1,6 @@
 # Licenciatura_en_Informatica_UNLP
 
-# Trabajos Prácticos - Licenciatura en Informática
+# Licenciatura en Informática - Trabajos Prácticos
 
 Bienvenido al repositorio de los trabajos prácticos de las materias de la Licenciatura en Informática de la Universidad Nacional de La Plata (UNLP).
 
